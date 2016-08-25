@@ -35,35 +35,58 @@ class PostIdForm extends React.Component {
   }
 }
 
+class Keyword extends React.Component {
+  render () {
+    return (
+      <div className="keyWord">
+        <span className="keyWordText">
+          {this.props.text}
+        </span>
+        <button onClick={() => this.props.onKeyWordRemoval(this.props.text)}>x</button>
+      </div>
+    );
+  }
+}
+
 class KeywordFilter extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
-          searchText: ''  
+          searchWords: []  
       };
-      this.handleSearchTextChange =_.debounce(this._handleSearchTextChange.bind(this), 100);
   };
 
-  onChange (e) {
-    e.persist();
-    this.setState({searchText: e.target.value});
-    this.handleSearchTextChange(e);
+  onKeyPress (e) {
+    if (e.key === 'Enter') {
+      let newSearchWords = this.state.searchWords.concat(e.target.value);
+      this.setState({ searchWords: newSearchWords});
+      this.props.keywordsChanged(newSearchWords);
+      e.target.value = '';
+    }
   }
 
-  _handleSearchTextChange (e) {
-    this.props.keywordsChanged(e.target.value.split(","));
+  onKeyWordRemoval(keyWord) {
+    let newSearchWords = this.state.searchWords.filter(kw => kw != keyWord );
+    this.setState({ searchWords: newSearchWords});
+    this.props.keywordsChanged(newSearchWords);
   }
 
   render () {
+    let keyWordNodes = this.state.searchWords.map(keyWord => {
+      return (
+        <Keyword text={keyWord} key={keyWord} onKeyWordRemoval={this.onKeyWordRemoval.bind(this)} />
+      );
+    })
+
     return (
-      <form className="keywordFilter">
+      <div>
         <input
           type="text"
           placeholder="Keywords to search for"
           value={this.state.searchText}
-          onChange={this.onChange.bind(this)}
+          onKeyPress={this.onKeyPress.bind(this)}
         />
-      </form>
+      <div>{keyWordNodes}</div></div>
     );
   }
 }
