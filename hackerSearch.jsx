@@ -2,7 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
 import _ from 'lodash';
+import tinycolor from 'tinycolor2';
 
+function _getColorFromIndex(i) {
+  let degreesToSpin = 65 * i;
+  return tinycolor("#FFD3B5").spin(degreesToSpin).toString();
+}
+
+var getColorFromIndex = _.memoize(_getColorFromIndex);
 
 class PostIdForm extends React.Component {
   constructor(props) {
@@ -37,8 +44,11 @@ class PostIdForm extends React.Component {
 
 class Keyword extends React.Component {
   render () {
+    let applyBackground = {
+      backgroundColor: getColorFromIndex(this.props.index)
+    };
     return (
-      <div className="keyWord">
+      <div className="keyWord" style={applyBackground}>
         <span className="keyWordText">
           {this.props.text}
         </span>
@@ -72,9 +82,9 @@ class KeywordFilter extends React.Component {
   }
 
   render () {
-    let keyWordNodes = this.state.searchWords.map(keyWord => {
+    let keyWordNodes = this.state.searchWords.map((keyWord, i) => {
       return (
-        <Keyword text={keyWord} key={keyWord} onKeyWordRemoval={this.onKeyWordRemoval.bind(this)} />
+        <Keyword text={keyWord} key={keyWord} index={i} onKeyWordRemoval={this.onKeyWordRemoval.bind(this)} />
       );
     })
 
@@ -103,7 +113,7 @@ class CommentList extends React.Component {
       .filter(this._filterComments, this)
       .map(comment => {
         return (
-          <Comment author={comment.author} key={comment.id}>
+          <Comment author={comment.author} key={comment.id} searchWords={this.props.searchWords}>
             {comment.text}
           </Comment>
         );
@@ -118,8 +128,21 @@ class CommentList extends React.Component {
 
 
 class Comment extends React.Component {
+  highlightWords(line, word, color) {
+      let regex = new RegExp( `(${word})`, 'gi' );
+      let spanTag = `<span style="background-color: ${color}">$1</span>`;
+      return line.replace(regex, spanTag);
+  }
+
+  highlightSearchWords(commentHtml) {
+    this.props.searchWords.forEach((searchWord, i) => {
+      commentHtml = this.highlightWords(commentHtml, searchWord, getColorFromIndex(i));
+    });
+    return commentHtml;
+  }
+
   rawHtml () {
-    return { __html: this.props.children };
+    return { __html: this.highlightSearchWords(this.props.children) };
   };
 
   render () {
