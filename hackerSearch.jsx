@@ -4,14 +4,23 @@ import $ from 'jquery';
 import _ from 'lodash';
 import tinycolor from 'tinycolor2';
 
-function _getColorFromIndex(i) {
-  let degreesToSpin = 65 * i;
-  return tinycolor("#FFD3B5").spin(degreesToSpin).toString();
+const baseHighlightColor = "#FFD3B5";
+const colorWheelIncrement = 63;
+
+function extractColorFromWheel(baseColor, degreeIncrement, i) {
+  let degreesToSpin = degreeIncrement * i;
+  return tinycolor(baseColor).spin(degreesToSpin).toString();
 }
 
-var getColorFromIndex = _.memoize(_getColorFromIndex);
+function highlightWordsInHtml(line, word, color) {
+      let regex = new RegExp( `(${word})`, 'gi' );
+      let spanTag = `<span style="background-color: ${color}">$1</span>`;
+      return line.replace(regex, spanTag);
+}
 
-class PostIdForm extends React.Component {
+var getColorFromIndex = _.memoize(index => extractColorFromWheel(baseHighlightColor, colorWheelIncrement, index));
+
+class WhosHiringSelect extends React.Component {
   constructor(props) {
       super(props);
       this.state = {
@@ -28,12 +37,12 @@ class PostIdForm extends React.Component {
 
   render () {
     return (
-      <form className="postIdForm">
+      <form className="whosHiringSelect">
         <select ref="userInput" defaultValue="" onChange={this.props.handleSelect}>
           <option value="" disabled>Select a thread</option>
           {
             this.state.threads.map((thread => {
-              return <option key={thread.objectID} value={thread.objectID}>{thread.title}</option>;
+              return <option key={thread.objectID} value={thread.objectID}>{thread.title.replace("Ask HN: ", "")}</option>;
             }))
           }
         </select>
@@ -48,12 +57,12 @@ class Keyword extends React.Component {
       backgroundColor: getColorFromIndex(this.props.index)
     };
     return (
-      <div className="keyWord" style={applyBackground}>
+      <span className="keyWord" style={applyBackground}>
         <span className="keyWordText">
           {this.props.text}
         </span>
         <button onClick={() => this.props.onKeyWordRemoval(this.props.text)}>x</button>
-      </div>
+      </span>
     );
   }
 }
@@ -128,15 +137,9 @@ class CommentList extends React.Component {
 
 
 class Comment extends React.Component {
-  highlightWords(line, word, color) {
-      let regex = new RegExp( `(${word})`, 'gi' );
-      let spanTag = `<span style="background-color: ${color}">$1</span>`;
-      return line.replace(regex, spanTag);
-  }
-
   highlightSearchWords(commentHtml) {
     this.props.searchWords.forEach((searchWord, i) => {
-      commentHtml = this.highlightWords(commentHtml, searchWord, getColorFromIndex(i));
+      commentHtml = highlightWordsInHtml(commentHtml, searchWord, getColorFromIndex(i));
     });
     return commentHtml;
   }
@@ -178,7 +181,7 @@ class HackerSearch extends React.Component {
      return (
         <div className="hackerSearch">
           <h1>Hacker Search</h1>
-          <PostIdForm handleSelect={this.threadSelected.bind(this)}/>
+          <WhosHiringSelect handleSelect={this.threadSelected.bind(this)}/>
           <KeywordFilter keywordsChanged={this.keywordsChanged.bind(this)}/>
           <CommentList comments={this.state.comments} searchWords={this.state.searchWords}/>
         </div>
