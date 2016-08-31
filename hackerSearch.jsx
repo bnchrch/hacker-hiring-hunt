@@ -5,7 +5,7 @@ import _ from 'lodash';
 import tinycolor from 'tinycolor2';
 
 const baseHighlightColor = "#FFD3B5";
-const colorWheelIncrement = 63;
+const colorWheelIncrement = 57;
 
 function extractColorFromWheel(baseColor, degreeIncrement, i) {
   let degreesToSpin = degreeIncrement * i;
@@ -127,9 +127,13 @@ class CommentList extends React.Component {
           </Comment>
         );
     })
+
     return (
-      <div className="commentList">
-        {commentNodes}
+      <div className="comments">
+        <div className="commentCount">{commentNodes.length}</div>
+        <div className="commentList">
+          {commentNodes}
+        </div>
       </div>
     );
   }
@@ -164,9 +168,7 @@ class HackerSearch extends React.Component {
   constructor(props) {
       super(props);
       this.state = {
-          comments: [
-            {author: "Loading", text: "please wait", id: 0}
-          ],
+          comments: [],
           searchWords: [],
           id: ""  
       };
