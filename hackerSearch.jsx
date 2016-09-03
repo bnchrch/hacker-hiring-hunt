@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Badge, Button, Col, FormControl, FormGroup, Glyphicon, Grid, Label, Row } from 'react-bootstrap';
 import $ from 'jquery';
 import _ from 'lodash';
 import tinycolor from 'tinycolor2';
@@ -37,16 +38,16 @@ class WhosHiringSelect extends React.Component {
 
   render () {
     return (
-      <form className="whosHiringSelect">
-        <select ref="userInput" defaultValue="" onChange={this.props.handleSelect}>
-          <option value="" disabled>Select a thread</option>
-          {
-            this.state.threads.map((thread => {
-              return <option key={thread.objectID} value={thread.objectID}>{thread.title.replace("Ask HN: ", "")}</option>;
-            }))
-          }
-        </select>
-      </form>
+      <FormGroup className="whosHiringSelect" controlId="formControlsSelect">
+      <FormControl componentClass="select" placeholder="select" ref="userInput" defaultValue="" onChange={this.props.handleSelect}>
+        <option value="" disabled>Select a thread</option>
+        {
+          this.state.threads.map((thread => {
+            return <option key={thread.objectID} value={thread.objectID}>{thread.title.replace("Ask HN: ", "")}</option>;
+          }))
+        }
+      </FormControl>
+      </FormGroup>
     );
   }
 }
@@ -57,12 +58,12 @@ class Keyword extends React.Component {
       backgroundColor: getColorFromIndex(this.props.index)
     };
     return (
-      <span className="keyWord" style={applyBackground}>
+      <Label className="keyWord" style={applyBackground}>
         <span className="keyWordText">
           {this.props.text}
         </span>
-        <button onClick={() => this.props.onKeyWordRemoval(this.props.text)}>x</button>
-      </span>
+        <Glyphicon glyph="remove-sign" onClick={() => this.props.onKeyWordRemoval(this.props.text)}/>
+      </Label>
     );
   }
 }
@@ -99,9 +100,9 @@ class KeywordFilter extends React.Component {
 
     return (
       <div>
-        <input
+        <FormControl
           type="text"
-          placeholder="Keywords to search for"
+          placeholder="Enter a Keyword to search for and press Enter (e.g. Python, Remote, Seattle...)"
           value={this.state.searchText}
           onKeyPress={this.onKeyPress.bind(this)}
         />
@@ -130,7 +131,7 @@ class CommentList extends React.Component {
 
     return (
       <div className="comments">
-        <div className="commentCount">{commentNodes.length}</div>
+        <Badge className="commentCount">{commentNodes.length}</Badge>
         <div className="commentList">
           {commentNodes}
         </div>
@@ -181,12 +182,14 @@ class HackerSearch extends React.Component {
         this.setState({comments: comments})
       });
      return (
-        <div className="hackerSearch">
+        <Grid className="hackerSearch">
+        <Col md={8} mdOffset={2}>
           <h1>Hacker Search</h1>
           <WhosHiringSelect handleSelect={this.threadSelected.bind(this)}/>
           <KeywordFilter keywordsChanged={this.keywordsChanged.bind(this)}/>
           <CommentList comments={this.state.comments} searchWords={this.state.searchWords}/>
-        </div>
+        </Col>
+        </Grid>
     );
   }
 
