@@ -5,7 +5,7 @@ import $ from 'jquery';
 import _ from 'lodash';
 import tinycolor from 'tinycolor2';
 
-const baseHighlightColor = "#FFD3B5";
+const baseHighlightColor = "#EEA776";
 const colorWheelIncrement = 57;
 
 function extractColorFromWheel(baseColor, degreeIncrement, i) {
