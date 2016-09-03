@@ -3,10 +3,39 @@
   <head>
     <meta charset="UTF-8">
     <title>Hacker Search</title>
-
     <!-- Latest compiled and minified bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css">
-  
+    <style>
+      .keyWord {
+        font-size: 14px;
+        padding: .3em .4em .4em;
+        margin: .1em .1em;
+        display: inline-block;
+      }
+      .keyWord a {
+        color: #bbb;
+        cursor: pointer;
+        opacity: 0.6;
+      }
+      .keyWord a:hover {
+        opacity: 1.0
+      }
+      .keyWord .remove {
+        vertical-align: bottom;
+        top: 0;
+      }
+      .keyWord .glyphicon-white {
+        color: #fff;
+        margin-top: 1px;
+      }
+      .keyWords {
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
+      .keyWordText {
+        padding-right: 5px;
+      }
+    </style>
   </head>
   <body>
     <div id="content"></div>

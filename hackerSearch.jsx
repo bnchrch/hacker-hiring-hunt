@@ -62,7 +62,7 @@ class Keyword extends React.Component {
         <span className="keyWordText">
           {this.props.text}
         </span>
-        <Glyphicon glyph="remove-sign" onClick={() => this.props.onKeyWordRemoval(this.props.text)}/>
+        <a><Glyphicon className="remove glyphicon-white" glyph="remove-sign" onClick={() => this.props.onKeyWordRemoval(this.props.text)}/></a>
       </Label>
     );
   }
@@ -106,7 +106,7 @@ class KeywordFilter extends React.Component {
           value={this.state.searchText}
           onKeyPress={this.onKeyPress.bind(this)}
         />
-      <div>{keyWordNodes}</div></div>
+      <div className="keyWords">{keyWordNodes}</div></div>
     );
   }
 }
@@ -183,12 +183,12 @@ class HackerSearch extends React.Component {
       });
      return (
         <Grid className="hackerSearch">
-        <Col md={8} mdOffset={2}>
-          <h1>Hacker Search</h1>
-          <WhosHiringSelect handleSelect={this.threadSelected.bind(this)}/>
-          <KeywordFilter keywordsChanged={this.keywordsChanged.bind(this)}/>
-          <CommentList comments={this.state.comments} searchWords={this.state.searchWords}/>
-        </Col>
+          <Col md={8} mdOffset={2}>
+            <h1>Hacker Search</h1>
+            <WhosHiringSelect handleSelect={this.threadSelected.bind(this)}/>
+            <KeywordFilter keywordsChanged={this.keywordsChanged.bind(this)}/>
+            <CommentList comments={this.state.comments} searchWords={this.state.searchWords}/>
+          </Col>
         </Grid>
     );
   }
