@@ -3,37 +3,66 @@
   <head>
     <meta charset="UTF-8">
     <title>Hacker Search</title>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Kaushan+Script">
     <!-- Latest compiled and minified bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css">
     <style>
-      .keyWord {
+      .keyword {
         font-size: 14px;
         padding: .3em .4em .4em;
         margin: .1em .1em;
         display: inline-block;
       }
-      .keyWord a {
+      .keyword a {
         color: #bbb;
         cursor: pointer;
         opacity: 0.6;
       }
-      .keyWord a:hover {
+      .keyword a:hover {
         opacity: 1.0
       }
-      .keyWord .remove {
+      .keyword .remove {
         vertical-align: bottom;
         top: 0;
       }
-      .keyWord .glyphicon-white {
+      .keyword .glyphicon-white {
         color: #fff;
         margin-top: 1px;
       }
-      .keyWords {
+      .keywords {
         margin-top: 10px;
         margin-bottom: 10px;
       }
-      .keyWordText {
+      .keywordText {
         padding-right: 5px;
+      }
+      .highlighted {
+        padding: 1px 3px;
+      }
+      body {
+        background-color: #eee8d5;
+        color: #586e75
+      }
+      .comment {
+        background-color: #fdf6e3;
+        padding: 1px 12px 7px 12px;
+        margin-bottom: 20px;
+        color: #93a1a1;
+      }
+      .commentCount {
+        background-color: #268bd2;
+        margin-bottom: 10px;
+        font-size: 15px;
+      }
+      .hackerSearch h1 {
+        text-align: center;
+        font-family: 'Kaushan Script', serif;
+        /*color: white;*/
+        font-size: 50px;
+        padding-bottom: 10px;
+      }
+      .double-bounce {
+        margin: auto;
       }
     </style>
   </head>

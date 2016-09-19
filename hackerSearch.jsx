@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Badge, Button, Col, FormControl, FormGroup, Glyphicon, Grid, Label, Row } from 'react-bootstrap';
+import { Badge, Button, Col, Fade, FormControl, FormGroup, Glyphicon, Grid, Label, Row } from 'react-bootstrap';
+import Spinner from 'react-spinkit';
 import $ from 'jquery';
 import _ from 'lodash';
 import tinycolor from 'tinycolor2';
@@ -14,20 +15,19 @@ function extractColorFromWheel(baseColor, degreeIncrement, i) {
 }
 
 function highlightWordsInHtml(line, word, color) {
-      let regex = new RegExp( `(${word})`, 'gi' );
-      let spanTag = `<span style="background-color: ${color}">$1</span>`;
-      return line.replace(regex, spanTag);
+  let regex = new RegExp( `(${word})`, 'gi' );
+  let spanTag = `<span class="highlighted" style="background-color: ${color}">$1</span>`;
+  return line.replace(regex, spanTag);
 }
 
 var getColorFromIndex = _.memoize(index => extractColorFromWheel(baseHighlightColor, colorWheelIncrement, index));
 
 class WhosHiringSelect extends React.Component {
   constructor(props) {
-      super(props);
-      this.state = {
-          threads: [],
-          optionsState: ""
-      };
+    super(props);
+    this.state = {
+        threads: []
+    };
   };
 
   componentDidMount() {
@@ -38,6 +38,7 @@ class WhosHiringSelect extends React.Component {
 
   render () {
     return (
+      <Fade in={this.state.threads.length> 0}>
       <FormGroup className="whosHiringSelect" controlId="formControlsSelect">
       <FormControl componentClass="select" placeholder="select" ref="userInput" defaultValue="" onChange={this.props.handleSelect}>
         <option value="" disabled>Select a thread</option>
@@ -48,6 +49,7 @@ class WhosHiringSelect extends React.Component {
         }
       </FormControl>
       </FormGroup>
+      </Fade>
     );
   }
 }
@@ -58,8 +60,8 @@ class Keyword extends React.Component {
       backgroundColor: getColorFromIndex(this.props.index)
     };
     return (
-      <Label className="keyWord" style={applyBackground}>
-        <span className="keyWordText">
+      <Label className="keyword" style={applyBackground}>
+        <span className="keywordText">
           {this.props.text}
         </span>
         <a><Glyphicon className="remove glyphicon-white" glyph="remove-sign" onClick={() => this.props.onKeyWordRemoval(this.props.text)}/></a>
@@ -69,11 +71,11 @@ class Keyword extends React.Component {
 }
 
 class KeywordFilter extends React.Component {
-    constructor(props) {
-      super(props);
-      this.state = {
-          searchWords: []  
-      };
+  constructor(props) {
+    super(props);
+    this.state = {
+        searchWords: []  
+    };
   };
 
   onKeyPress (e) {
@@ -85,16 +87,16 @@ class KeywordFilter extends React.Component {
     }
   }
 
-  onKeyWordRemoval(keyWord) {
-    let newSearchWords = this.state.searchWords.filter(kw => kw != keyWord );
+  onKeyWordRemoval(keyword) {
+    let newSearchWords = this.state.searchWords.filter(kw => kw != keyword );
     this.setState({ searchWords: newSearchWords});
     this.props.keywordsChanged(newSearchWords);
   }
 
   render () {
-    let keyWordNodes = this.state.searchWords.map((keyWord, i) => {
+    let keywordNodes = this.state.searchWords.map((keyword, i) => {
       return (
-        <Keyword text={keyWord} key={keyWord} index={i} onKeyWordRemoval={this.onKeyWordRemoval.bind(this)} />
+        <Keyword text={keyword} key={keyword} index={i} onKeyWordRemoval={this.onKeyWordRemoval.bind(this)} />
       );
     })
 
@@ -106,7 +108,7 @@ class KeywordFilter extends React.Component {
           value={this.state.searchText}
           onKeyPress={this.onKeyPress.bind(this)}
         />
-      <div className="keyWords">{keyWordNodes}</div></div>
+      <div className="keywords">{keywordNodes}</div></div>
     );
   }
 }
@@ -167,27 +169,36 @@ class Comment extends React.Component {
 
 class HackerSearch extends React.Component {
   constructor(props) {
-      super(props);
-      this.state = {
-          comments: [],
-          searchWords: [],
-          id: ""  
-      };
+    super(props);
+    this.state = {
+        comments: [],
+        searchWords: [],
+        id: "" 
+    };
   };
 
   render() {
-    this.serverRequest = $.get(`http://hn.algolia.com/api/v1/items/${this.state.id}`, (result) => {
-        let comments = result.children
-          .filter(x => x.text);
+    if (this.state.id != "") {
+      this.serverRequest = $.get(`http://hn.algolia.com/api/v1/items/${this.state.id}`, (result) => {
+        let comments = result.children.filter(x => x.text);
         this.setState({comments: comments})
       });
+    }
+
      return (
         <Grid className="hackerSearch">
           <Col md={8} mdOffset={2}>
-            <h1>Hacker Search</h1>
+            <h1>Hacker Hiring Hunt</h1>
             <WhosHiringSelect handleSelect={this.threadSelected.bind(this)}/>
-            <KeywordFilter keywordsChanged={this.keywordsChanged.bind(this)}/>
-            <CommentList comments={this.state.comments} searchWords={this.state.searchWords}/>
+            <Fade in={this.state.comments.length > 0}>
+              <div>
+                <KeywordFilter keywordsChanged={this.keywordsChanged.bind(this)}/>
+                <CommentList comments={this.state.comments} searchWords={this.state.searchWords}/>
+              </div>
+            </Fade>
+            <Col md={8} mdOffset={2}>
+              <Spinner hidden={this.state.id === "" && this.state.comments.length === 0} spinnerName='double-bounce' />
+            </Col>
           </Col>
         </Grid>
     );
