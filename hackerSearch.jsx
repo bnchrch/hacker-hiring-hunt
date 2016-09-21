@@ -3,25 +3,10 @@ import ReactDOM from 'react-dom';
 import { Badge, Button, Col, Fade, FormControl, FormGroup, Glyphicon, Grid, Label, Row } from 'react-bootstrap';
 import Spinner from 'react-spinkit';
 import $ from 'jquery';
-import _ from 'lodash';
-import tinycolor from 'tinycolor2';
+import util from "./util.js"
 import moment from "moment";
 
-const baseHighlightColor = "#EEA776";
-const colorWheelIncrement = 57;
 
-function extractColorFromWheel(baseColor, degreeIncrement, i) {
-  let degreesToSpin = degreeIncrement * i;
-  return tinycolor(baseColor).spin(degreesToSpin).toString();
-}
-
-function highlightWordsInHtml(line, word, color) {
-  let regex = new RegExp( `(${word})`, 'gi' );
-  let spanTag = `<span class="highlighted" style="background-color: ${color}">$1</span>`;
-  return line.replace(regex, spanTag);
-}
-
-var getColorFromIndex = _.memoize(index => extractColorFromWheel(baseHighlightColor, colorWheelIncrement, index));
 
 class WhosHiringSelect extends React.Component {
   constructor(props) {
@@ -58,7 +43,7 @@ class WhosHiringSelect extends React.Component {
 class Keyword extends React.Component {
   render () {
     let applyBackground = {
-      backgroundColor: getColorFromIndex(this.props.index)
+      backgroundColor: util.getColorFromIndex(this.props.index)
     };
     return (
       <Label className="keyword" style={applyBackground}>
@@ -147,7 +132,7 @@ class CommentList extends React.Component {
 class Comment extends React.Component {
   highlightSearchWords(commentHtml) {
     this.props.searchWords.forEach((searchWord, i) => {
-      commentHtml = highlightWordsInHtml(commentHtml, searchWord, getColorFromIndex(i));
+      commentHtml = util.highlightWordsInHtml(commentHtml, searchWord, util.getColorFromIndex(i));
     });
     return commentHtml;
   }
