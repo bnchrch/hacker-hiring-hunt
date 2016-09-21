@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <title>Hacker Search</title>
-    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Kaushan+Script">
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Yesteryear">
     <!-- Latest compiled and minified bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css">
     <style>
@@ -13,34 +13,42 @@
         margin: .1em .1em;
         display: inline-block;
       }
+
       .keyword a {
         color: #bbb;
         cursor: pointer;
         opacity: 0.6;
       }
+
       .keyword a:hover {
         opacity: 1.0
       }
+
       .keyword .remove {
         vertical-align: bottom;
         top: 0;
       }
+
       .keyword .glyphicon-white {
         color: #fff;
         margin-top: 1px;
       }
+
       .keywords {
         margin-top: 10px;
         margin-bottom: 10px;
       }
+
       .keywordText {
         padding-right: 5px;
       }
+
       .highlighted {
         padding: 1px 3px;
         color: white;
         margin: 0px 1px;
       }
+
       body {
         /*background-color: #eee8d5;*/
         /*background-color: #f9f9f9;*/
@@ -48,6 +56,7 @@
         /*TODO: do this with css*/
         background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAJElEQVQYV2NkIBIwEqmOgQ4K9+7d+9/Z2RnDJjpYjSsUqG81AJVuBAvCx2SfAAAAAElFTkSuQmCC) repeat;
       }
+
       .comment {
         /*background-color: #fdf6e3;*/
         background-color: white;
@@ -55,34 +64,47 @@
         margin-bottom: 20px;
         border: 1px solid #efefef;
       }
+
       .commentCount {
-        background-color: #268bd2;
+        background-color: #ff6600;
         margin-bottom: 10px;
         font-size: 15px;
       }
+
       .hackerSearch h1 {
         text-align: center;
-        font-family: 'Kaushan Script', serif;
-        color: white;
-        font-size: 50px;
+        font-family: 'Yesteryear', serif;
+        color: #ff6600;
+        font-size: 70px;
         padding-bottom: 10px;
-        text-shadow: 0px 0px 5px black;
+        /*text-shadow: 0px 0px 5px black;*/
 
       }
+
       .createdAt {
         font-size: 10px; 
         font-style: normal; 
         font-weight: 100px;
       }
+
       .double-bounce {
         margin: auto;
       }
+
       .commentAuthor {
         color: #93a1a1;
         padding-bottom: 10px;
         border-bottom: 1px solid #93a1a1;
         width: 50%;
         font-weight: 200;
+      }
+
+      .double-bounce1, .double-bounce2 {
+        background-color: #ff6600 !important;
+      }
+
+      .form-control:focus {
+        border-color: #EEA776;
       }
     </style>
   </head>
