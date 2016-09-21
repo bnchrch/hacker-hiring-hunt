@@ -1,10 +1,11 @@
 # Hacker Search
 A tool for quickly searching the hacker news whos hiring threads
 
+![](http://i.imgur.com/UYXO9lz.png)
 # Still Under Construction
 
 ## TODO
-- [ ] final color scheme
+- [x] final color scheme
 - [ ] animations
 - [ ] unmount bug
 - [ ] spinner bug
