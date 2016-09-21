@@ -5,6 +5,7 @@ import Spinner from 'react-spinkit';
 import $ from 'jquery';
 import _ from 'lodash';
 import tinycolor from 'tinycolor2';
+import moment from "moment";
 
 const baseHighlightColor = "#EEA776";
 const colorWheelIncrement = 57;
@@ -121,11 +122,12 @@ class CommentList extends React.Component {
   }
 
   render () {
+    console.dir(this.props.comments);
     let commentNodes = this.props.comments
       .filter(this._filterComments, this)
       .map(comment => {
         return (
-          <Comment author={comment.author} key={comment.id} searchWords={this.props.searchWords}>
+          <Comment key={comment.id} author={comment.author} createdAt={moment(comment.created_at).format("h:mm:ss a on MMMM Do YYYY")}  searchWords={this.props.searchWords}>
             {comment.text}
           </Comment>
         );
@@ -158,9 +160,9 @@ class Comment extends React.Component {
   render () {
     return (
       <div className="comment">
-        <h2 className="commentAuthor">
-          {this.props.author}
-        </h2>
+        <h4 className="commentAuthor">
+          {this.props.author} <span className="createdAt">{this.props.createdAt}</span>
+        </h4>
         <span dangerouslySetInnerHTML={this.rawHtml()} />
       </div>
     );
