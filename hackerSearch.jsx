@@ -122,7 +122,6 @@ class CommentList extends React.Component {
   }
 
   render () {
-    console.dir(this.props.comments);
     let commentNodes = this.props.comments
       .filter(this._filterComments, this)
       .map(comment => {
