@@ -7,9 +7,9 @@ A tool for quickly searching the hacker news whos hiring threads
 ## TODO
 - [x] final color scheme
 - [ ] animations
-- [ ] unmount bug
-- [ ] spinner bug
-- [ ] loading spinner
+- [x] unmount bug
+- [x] spinner bug
+- [x] loading spinner
 - [ ] breadcrumbs
 - [ ] split jsx up in:
   - [x] js,

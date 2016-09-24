@@ -13,18 +13,20 @@ class HackerSearch extends React.Component {
     this.state = {
         comments: [],
         searchWords: [],
-        id: "" 
+        id: "",
+        loading: false 
     };
   };
 
-  render() {
-    if (this.state.id != "") {
-      this.serverRequest = $.get(`http://hn.algolia.com/api/v1/items/${this.state.id}`, (result) => {
+  loadThreadById(id) {
+    this.setState({id: id, loading: true, comments: []})
+    this.serverRequest = $.get(`http://hn.algolia.com/api/v1/items/${id}`, (result) => {
         let comments = result.children.filter(x => x.text);
-        this.setState({comments: comments})
+        this.setState({comments: comments, loading: false});
       });
-    }
+  }
 
+  render() {
      return (
         <Grid className="hackerSearch">
           <Col md={8} mdOffset={2}>
@@ -37,7 +39,7 @@ class HackerSearch extends React.Component {
               </div>
             </Fade>
             <Col md={8} mdOffset={2}>
-              <Spinner hidden={this.state.id === "" && this.state.comments.length === 0} spinnerName='double-bounce' />
+              <Spinner hidden={!this.state.loading} spinnerName='double-bounce' noFadeIn={true} />
             </Col>
           </Col>
         </Grid>
@@ -50,7 +52,7 @@ class HackerSearch extends React.Component {
 
   threadSelected(e) {
     let id = e.target.value;
-    this.setState({id: id})
+    this.loadThreadById(id)
   }
 }
 

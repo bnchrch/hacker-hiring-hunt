@@ -26,7 +26,11 @@ export default class CommentList extends React.Component {
       <div className="comments">
         <Badge className="commentCount">{commentNodes.length}</Badge>
         <div className="commentList">
-          {commentNodes}
+          {
+            this.props.comments.length > 0 && commentNodes.length === 0
+            ? <div className="comment notFound"><h3>Sorry! We couldn't find the kind of post your looking for</h3></div>
+            : commentNodes
+          }
         </div>
       </div>
     );
