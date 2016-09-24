@@ -38,9 +38,7 @@ class HackerSearch extends React.Component {
                 <CommentList comments={this.state.comments} searchWords={this.state.searchWords}/>
               </div>
             </Fade>
-            <Col md={8} mdOffset={2}>
-              <Spinner hidden={!this.state.loading} spinnerName='double-bounce' noFadeIn={true} />
-            </Col>
+            <Spinner hidden={!this.state.loading} spinnerName='double-bounce' noFadeIn={true} />
           </Col>
         </Grid>
     );
