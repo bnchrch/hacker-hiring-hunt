@@ -10,8 +10,10 @@ A tool for quickly searching the hacker news whos hiring threads
 - [x] unmount bug
 - [x] spinner bug
 - [x] loading spinner
+- [ ] comments
+- [ ] clean up jsx
 - [ ] breadcrumbs
-- [ ] split jsx up in:
+- [ ] split jsx up into:
   - [x] js,
   - [x] jsx,
   - [ ] css,
