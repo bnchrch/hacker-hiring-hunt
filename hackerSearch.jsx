@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Route, Router } from 'react-router';
 import { Col, Fade, Grid } from 'react-bootstrap';
 import Spinner from 'react-spinkit';
 import $ from 'jquery';
@@ -24,6 +25,12 @@ class HackerSearch extends React.Component {
         let comments = result.children.filter(x => x.text);
         this.setState({comments: comments, loading: false});
       });
+  }
+
+  componentWillReceiveProps(newProps) {
+    if(this.props.params.threadId) {
+      this.loadThreadById(this.params.id);
+    }
   }
 
   render() {
@@ -55,6 +62,9 @@ class HackerSearch extends React.Component {
 }
 
 ReactDOM.render(
-  <HackerSearch />,
+  <Router>
+    <Route path="/" component={HackerSearch} />
+    <Route path="/:threadId" component={HackerSearch} />
+  </Router>,
   document.getElementById('content')
 );

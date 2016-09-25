@@ -28,7 +28,7 @@ export default class CommentList extends React.Component {
         <div className="commentList">
           {
             this.props.comments.length > 0 && commentNodes.length === 0
-            ? <div className="comment notFound"><h3>Sorry! We couldn't find the kind of post your looking for</h3></div>
+            ? <div className="comment notFound"><h2>:(</h2><h3>Sorry! We couldn't find the kind of post your looking for</h3></div>
             : commentNodes
           }
         </div>
