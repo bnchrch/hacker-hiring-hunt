@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Route, Router } from 'react-router';
+import { Route, Router, browserHistory, hashHistory } from 'react-router';
 import { Col, Fade, Grid } from 'react-bootstrap';
 import Spinner from 'react-spinkit';
 import $ from 'jquery';
@@ -19,6 +19,11 @@ class HackerSearch extends React.Component {
     };
   };
 
+  changeUrl(id) {
+      console.dir(this)
+      browserHistory.push(id);
+  }
+
   loadThreadById(id) {
     this.setState({id: id, loading: true, comments: []})
     this.serverRequest = $.get(`http://hn.algolia.com/api/v1/items/${id}`, (result) => {
@@ -28,8 +33,8 @@ class HackerSearch extends React.Component {
   }
 
   componentWillReceiveProps(newProps) {
-    if(this.props.params.threadId) {
-      this.loadThreadById(this.params.id);
+    if(newProps.params.threadId) {
+      this.loadThreadById(newProps.params.threadId);
     }
   }
 
@@ -38,7 +43,7 @@ class HackerSearch extends React.Component {
         <Grid className="hackerSearch">
           <Col md={8} mdOffset={2}>
             <h1>Hacker Hiring Hunt</h1>
-            <WhosHiringSelect handleSelect={this.threadSelected.bind(this)}/>
+            <WhosHiringSelect handleSelect={this.changeUrl.bind(this)}/>
             <Fade in={this.state.comments.length > 0}>
               <div>
                 <KeywordFilter keywordsChanged={this.keywordsChanged.bind(this)}/>
@@ -62,7 +67,7 @@ class HackerSearch extends React.Component {
 }
 
 ReactDOM.render(
-  <Router>
+  <Router history={hashHistory}>
     <Route path="/" component={HackerSearch} />
     <Route path="/:threadId" component={HackerSearch} />
   </Router>,
