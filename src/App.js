@@ -1,28 +1,30 @@
-import React, { Component } from 'react';
+import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
-  }
-}
+import compose from 'recompose/compose';
+import withProps from 'recompose/withProps';
+import withState from 'recompose/withState';
+import lifecycle from 'recompose/lifecycle';
 
-export default App;
+const HackerSearchPure = ({test, threads = []}) => (
+  <div className="App">
+    WAHT
+    {test && test.hits.map(({title}) => <div>{title}</div>)}
+  </div>
+);
+
+const HackerSearch = compose(
+  withState('test', 'setTest', undefined),
+  lifecycle({
+    async componentWillMount () {
+      const hold = await fetch("https://hn.algolia.com/api/v1/search_by_date?tags=story,author_whoishiring")
+      const hold2 = await hold.json()
+      console.dir(hold2)
+      this.props.setTest(hold2)
+      return {test: "WHAT"}
+    }
+  })
+)(HackerSearchPure)
+
+export default HackerSearch;
