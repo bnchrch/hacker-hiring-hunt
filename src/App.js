@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 // import logo from './logo.svg';
 // import './App.css';
 import getOr from 'lodash/fp/getOr';
@@ -103,8 +103,6 @@ const Keyword = ({text, removeKeyword, index}) => {
     backgroundColor: getColorFromIndex(index),
   };
 
-  console.log("COLOR", applyBackground, index, getColorFromIndex(index))
-
   return (
     <span className="keywordText" style={applyBackground}>
       {text}
@@ -184,31 +182,40 @@ const Comment = ({author, created_at, text, keywords}) => {
 }
 
 const CommentListPure = ({comments, keywords, containsKeywords, addKeyword, removeKeyword}) => {
-  console.log(comments)
   const renderedComments = getOr([], 'children', comments)
     .filter(x => x.text)
     .filter(containsKeywords)
     .map(comment => (
       <Comment  key={comment.id} keywords={keywords} {...comment}/>
     ));
-  return (
+
+  return comments.length > 0 && (
     <div>
-    <KeywordFilter
-      keywords={keywords}
-      addKeyword={addKeyword}
-      removeKeyword={removeKeyword}
-    />
-    {renderedComments}
+      <KeywordFilter
+        keywords={keywords}
+        addKeyword={addKeyword}
+        removeKeyword={removeKeyword}
+      />
+      <div className="commentCount">
+        {renderedComments.length}
+      </div>
+      {renderedComments}
     </div>
   );
 };
 
 const withCommentData = compose(
   withState('comments', 'setComments', []),
+  withHandlers({
+    fetchComments: ({setComments, threadId}) => () => {
+      threadId && fetchUrl(commentUrl(threadId), setComments)
+    }
+  }),
   lifecycle({
-    componentWillMount() {
-      const {setComments, threadId} = this.props;
-      fetchUrl(commentUrl(threadId), setComments)
+    componentWillUpdate({fetchComments, threadId}) {
+      if (threadId !== this.props.threadId) {
+        fetchComments()
+      }
     },
   })
 )
@@ -229,16 +236,10 @@ const HackerSearchPure = ({threadOptions, selectedThread, setSelectedThread}) =>
         onChange={(thread) => setSelectedThread(thread)}
         options={threadOptions}
       />
-      {threadId &&
-        <CommentList
-          threadId={threadId}
-        />}
+      <CommentList threadId={threadId}/>
     </div>
   );
 };
-
-// HOC's
-
 
 const HackerSearch = withHiringThreads(HackerSearchPure)
 
