@@ -4,6 +4,8 @@ import React, {useState, useEffect} from 'react';
 import getOr from 'lodash/fp/getOr';
 import get from 'lodash/fp/get';
 import uniq from 'lodash/fp/uniq';
+import memoize from 'lodash/fp/memoize';
+
 import Select from 'react-select';
 
 import compose from 'recompose/compose';
@@ -13,6 +15,63 @@ import withHandlers from 'recompose/withHandlers';
 import lifecycle from 'recompose/lifecycle';
 
 import moment from 'moment';
+import tinycolor from 'tinycolor2';
+
+// UTIL
+
+const baseHighlightColor = '#EEA776';
+const colorWheelIncrement = 57;
+
+/**
+ * Given a base color rotate it along the color wheel by
+ * degreeIncrement * i and return the new color
+ *
+ * @param {string} baseColor        base color of the color wheel
+ * @param {number} degreeIncrement  degrees to rotate by at each itteration
+ * @param {number} i                rotation itteration
+ */
+function extractColorFromWheel(baseColor, degreeIncrement, i) {
+  const degreesToSpin = degreeIncrement * i;
+  return tinycolor(baseColor).spin(degreesToSpin).toString();
+}
+
+/**
+ * Applies a span tag around any instances of a given word to use in html highlighting
+ *
+ * @param {string} line  string to highlight a word in
+ * @param {string} word  the word to highlight
+ * @param {string} color the color to use for highlighting
+ * @returns
+ */
+function highlightWordsInHtml(line, word, color) {
+  const regex = new RegExp(`(${word})`, 'gi');
+  const spanTag = `<span class="highlighted" style="background-color: ${color}">$1</span>`;
+  return line.replace(regex, spanTag);
+}
+
+/**
+ * Memoizes extractColorFromWheel so values at the index given are cached
+ *
+ * @param {number} index number to use for color wheel rotation
+ */
+const getColorFromIndex = memoize((index) => {
+  return extractColorFromWheel(baseHighlightColor, colorWheelIncrement, index);
+});
+
+/**
+ * Checks if the event key is 'Enter'
+ * @param {Object} event - React-wrapped browser event
+ * @param {String} event.key - Key pressed during event
+ * @returns {Boolean} Returns true if the event key is 'Enter'
+ */
+const isEnterKey = ({key}) => key === 'Enter';
+
+/**
+ * Calls a given function if a Enter keypress is received.
+ * @param {Function} eventHandleFn - Function to call on enter keypress.
+ * @returns {Function} The function to be used by event handlers
+ */
+const ifEnterKey = (eventHandleFn) => (e, p) => isEnterKey(e) && eventHandleFn(e, p);
 
 // THREADS
 
@@ -39,9 +98,15 @@ const withHiringThreads = compose(
 
 // Keyword list
 
-const Keyword = ({text, removeKeyword}) => {
+const Keyword = ({text, removeKeyword, index}) => {
+  const applyBackground = {
+    backgroundColor: getColorFromIndex(index),
+  };
+
+  console.log("COLOR", applyBackground, index, getColorFromIndex(index))
+
   return (
-    <span className="keywordText">
+    <span className="keywordText" style={applyBackground}>
       {text}
       <button onClick={() => removeKeyword(text)}>🙅‍</button>
     </span>
@@ -92,14 +157,28 @@ const withKeywords = compose(
 
 // COMMENTS
 
-const Comment = ({author, created_at, text}) => {
+const highlightKeywords = (commentHtml, keywords) => {
+  let updatedCommentHtml = commentHtml;
+  keywords.forEach((searchWord, i) => {
+    updatedCommentHtml = highlightWordsInHtml(updatedCommentHtml, searchWord, getColorFromIndex(i));
+  });
+  return updatedCommentHtml;
+};
+
+const CommentBody = ({text, keywords}) => {
+  return (
+    <span dangerouslySetInnerHTML={{ __html: highlightKeywords(text, keywords)}} />
+  );
+}
+
+const Comment = ({author, created_at, text, keywords}) => {
   const formattedCreatedAt = moment(created_at).format('h:mm:ss a on MMMM Do YYYY')
   return (
     <div className="comment">
       <h4 className="commentAuthor">
         {author} <span className="createdAt">{formattedCreatedAt}</span>
       </h4>
-      <span dangerouslySetInnerHTML={{ __html: text}} />
+      <CommentBody text={text} keywords={keywords}/>
     </div>
   )
 }
@@ -110,7 +189,7 @@ const CommentListPure = ({comments, keywords, containsKeywords, addKeyword, remo
     .filter(x => x.text)
     .filter(containsKeywords)
     .map(comment => (
-      <Comment  key={comment.id} {...comment}/>
+      <Comment  key={comment.id} keywords={keywords} {...comment}/>
     ));
   return (
     <div>
@@ -138,22 +217,6 @@ const CommentList = compose(
   withCommentData,
   withKeywords,
 )(CommentListPure);
-
-// UTIL
-/**
- * Checks if the event key is 'Enter'
- * @param {Object} event - React-wrapped browser event
- * @param {String} event.key - Key pressed during event
- * @returns {Boolean} Returns true if the event key is 'Enter'
- */
-const isEnterKey = ({key}) => key === 'Enter';
-
-/**
- * Calls a given function if a Enter keypress is received.
- * @param {Function} eventHandleFn - Function to call on enter keypress.
- * @returns {Function} The function to be used by event handlers
- */
-const ifEnterKey = (eventHandleFn) => (e, p) => isEnterKey(e) && eventHandleFn(e, p);
 
 // MAIN
 
