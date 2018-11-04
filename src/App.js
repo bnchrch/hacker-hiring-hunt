@@ -1,30 +1,48 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {useState, useEffect} from 'react';
+// import logo from './logo.svg';
+// import './App.css';
+import getOr from 'lodash/fp/getOr';
+import Select from 'react-select';
 
-import compose from 'recompose/compose';
-import withProps from 'recompose/withProps';
-import withState from 'recompose/withState';
-import lifecycle from 'recompose/lifecycle';
 
-const HackerSearchPure = ({test, threads = []}) => (
-  <div className="App">
-    WAHT
-    {test && test.hits.map(({title}) => <div>{title}</div>)}
-  </div>
-);
+const fetchWith = async (url) => {
+  const response = await fetch(url)
+  return await response.json()
+};
 
-const HackerSearch = compose(
-  withState('test', 'setTest', undefined),
-  lifecycle({
-    async componentWillMount () {
-      const hold = await fetch("https://hn.algolia.com/api/v1/search_by_date?tags=story,author_whoishiring")
-      const hold2 = await hold.json()
-      console.dir(hold2)
-      this.props.setTest(hold2)
-      return {test: "WHAT"}
-    }
+const fetchUrl = (url) => {
+  const [response, setResponse] = useState(undefined);
+  useEffect(async () => {
+    const jsonResponse = await fetchWith(url)
+    setResponse(jsonResponse)
   })
-)(HackerSearchPure)
 
-export default HackerSearch;
+  return response;
+}
+
+const fetchWhosHiringThreads = () => {
+  const data = fetchUrl("https://hn.algolia.com/api/v1/search_by_date?tags=story,author_whoishiring");
+  return getOr([], 'hits', data);
+}
+
+const HackerSearchPure = () => {
+  const threads = fetchWhosHiringThreads();
+  const [selectedThread, setSelectThread] = useState(undefined);
+
+  const formatedThreads = threads.map(({title, objectID}) => ({label: title, value: objectID}));
+
+  console.dir(threads)
+  return (
+    <div className="App">
+      {getOr("NOPE", 'value', selectedThread)}
+      <Select
+        value={selectedThread}
+        onChange={setSelectThread}
+        options={formatedThreads}
+      />
+  </div>
+
+  );
+};
+
+export default HackerSearchPure;
