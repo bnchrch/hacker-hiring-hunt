@@ -37,47 +37,6 @@ const withHiringThreads = compose(
   })
 )
 
-// COMMENTS
-
-const Comment = ({author, created_at, text}) => {
-  const formattedCreatedAt = moment(created_at).format('h:mm:ss a on MMMM Do YYYY')
-  return (
-    <div className="comment">
-      <h4 className="commentAuthor">
-        {author} <span className="createdAt">{formattedCreatedAt}</span>
-      </h4>
-      <span dangerouslySetInnerHTML={{ __html: text}} />
-    </div>
-  )
-}
-
-const CommentListPure = ({comments}) => {
-  console.log(comments)
-  const renderedComments = getOr([], 'children', comments)
-    .filter(x => x.text)
-    .map(comment => (
-      <Comment  key={comment.id} {...comment}/>
-    ));
-  return (
-    <div>
-    <KeywordFilter/>
-    {renderedComments}
-    </div>
-  );
-};
-
-const withCommentData = compose(
-  withState('comments', 'setComments', []),
-  lifecycle({
-    componentWillMount() {
-      const {setComments, threadId} = this.props;
-      fetchUrl(commentUrl(threadId), setComments)
-    },
-  })
-)
-
-const CommentList = withCommentData(CommentListPure);
-
 // Keyword list
 
 const Keyword = ({text, removeKeyword}) => {
@@ -89,7 +48,7 @@ const Keyword = ({text, removeKeyword}) => {
   );
 }
 
-const KeywordFilterPure = ({keywords, addKeyword, removeKeyword}) => {
+const KeywordFilter = ({keywords, addKeyword, removeKeyword}) => {
   const keywordNodes = keywords.map((keyword, i) => {
     return (
       <Keyword text={keyword} key={keyword} index={i} removeKeyword={removeKeyword}/>
@@ -109,20 +68,76 @@ const KeywordFilterPure = ({keywords, addKeyword, removeKeyword}) => {
     );
 }
 
-const KeywordFilter = compose(
+const withKeywords = compose(
   withState('keywords', 'setKeywords', []),
   withHandlers({
     removeKeyword: ({keywords, setKeywords}) => (keyword_to_remove) => {
       const newKeywords = keywords.filter(keyword => keyword !== keyword_to_remove);
       setKeywords(newKeywords);
     },
+
     addKeyword: ({keywords, setKeywords}) => (event) => {
       const newKeywords = uniq(keywords.concat(event.target.value));
       setKeywords(newKeywords);
       event.target.value = '';
+    },
+
+    containsKeywords: ({keywords}) => ({text}) => {
+      return keywords.reduce((prev, keyword) => {
+        return prev && text.toLowerCase().indexOf(keyword.toLowerCase()) >= 0;
+      }, true);
     }
   })
-)(KeywordFilterPure)
+)
+
+// COMMENTS
+
+const Comment = ({author, created_at, text}) => {
+  const formattedCreatedAt = moment(created_at).format('h:mm:ss a on MMMM Do YYYY')
+  return (
+    <div className="comment">
+      <h4 className="commentAuthor">
+        {author} <span className="createdAt">{formattedCreatedAt}</span>
+      </h4>
+      <span dangerouslySetInnerHTML={{ __html: text}} />
+    </div>
+  )
+}
+
+const CommentListPure = ({comments, keywords, containsKeywords, addKeyword, removeKeyword}) => {
+  console.log(comments)
+  const renderedComments = getOr([], 'children', comments)
+    .filter(x => x.text)
+    .filter(containsKeywords)
+    .map(comment => (
+      <Comment  key={comment.id} {...comment}/>
+    ));
+  return (
+    <div>
+    <KeywordFilter
+      keywords={keywords}
+      addKeyword={addKeyword}
+      removeKeyword={removeKeyword}
+    />
+    {renderedComments}
+    </div>
+  );
+};
+
+const withCommentData = compose(
+  withState('comments', 'setComments', []),
+  lifecycle({
+    componentWillMount() {
+      const {setComments, threadId} = this.props;
+      fetchUrl(commentUrl(threadId), setComments)
+    },
+  })
+)
+
+const CommentList = compose(
+  withCommentData,
+  withKeywords,
+)(CommentListPure);
 
 // UTIL
 /**
@@ -158,6 +173,9 @@ const HackerSearchPure = ({threadOptions, selectedThread, setSelectedThread}) =>
     </div>
   );
 };
+
+// HOC's
+
 
 const HackerSearch = withHiringThreads(HackerSearchPure)
 
