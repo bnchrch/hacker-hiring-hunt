@@ -1,6 +1,6 @@
 import React from 'react';
 // import logo from './logo.svg';
-// import './App.css';
+import './App.css';
 import getOr from 'lodash/fp/getOr';
 import get from 'lodash/fp/get';
 import uniq from 'lodash/fp/uniq';
@@ -231,6 +231,8 @@ const HackerSearchPure = ({threadOptions, selectedThread, setSelectedThread}) =>
   const threadId = get('value', selectedThread);
   return (
     <div className="App">
+      <h1>Hacker Hiring Hunt</h1>
+
       <Select
         value={selectedThread}
         onChange={(thread) => setSelectedThread(thread)}

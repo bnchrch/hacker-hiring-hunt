@@ -6,6 +6,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color: #586e75;
+  background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAJElEQVQYV2NkIBIwEqmOgQ4K9+7d+9/Z2RnDJjpYjSsUqG81AJVuBAvCx2SfAAAAAElFTkSuQmCC) repeat;
 }
 
 code {
