@@ -181,7 +181,7 @@ const Comment = ({author, created_at, text, keywords}) => {
   )
 }
 
-const CommentListPure = ({comments, keywords, containsKeywords, addKeyword, removeKeyword}) => {
+const CommentListPure = ({comments, fetchComments, keywords, containsKeywords, addKeyword, removeKeyword}) => {
   const allComments = getOr([], 'children', comments)
   const renderedComments = allComments
     .filter(x => x.text)
@@ -197,6 +197,15 @@ const CommentListPure = ({comments, keywords, containsKeywords, addKeyword, remo
         addKeyword={addKeyword}
         removeKeyword={removeKeyword}
       />
+      <div className="commentCount refreshButton">
+          <a
+            className="glyphicon-white"
+            // glyph="refresh"
+            onClick={fetchComments}
+          >
+          ♻️
+          </a>
+        </div>
       <div className="commentCount">
         {renderedComments.length}
       </div>
