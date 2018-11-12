@@ -17,6 +17,11 @@ import lifecycle from 'recompose/lifecycle';
 import moment from 'moment';
 import tinycolor from 'tinycolor2';
 
+import Icon from 'react-icons-kit';
+import { timesCircle } from 'react-icons-kit/fa/timesCircle';
+import { refresh } from 'react-icons-kit/fa/refresh';
+
+
 // UTIL
 
 const baseHighlightColor = '#EEA776';
@@ -104,10 +109,16 @@ const Keyword = ({text, removeKeyword, index}) => {
   };
 
   return (
-    <span className="keywordText" style={applyBackground}>
-      {text}
-      <button onClick={() => removeKeyword(text)}>🙅‍</button>
-    </span>
+    <div className="badge keyword" style={applyBackground}>
+      <span className="keywordText" style={applyBackground}>
+        {text}
+      </span>
+      <Icon
+        className="remove glyphicon-white"
+        icon={timesCircle}
+        onClick={() => removeKeyword(text)}
+      />
+    </div>
   );
 }
 
@@ -123,6 +134,7 @@ const KeywordFilter = ({keywords, addKeyword, removeKeyword}) => {
         type="text"
         placeholder="Enter a Keyword to search for and press Enter (e.g. Python, Remote, Seattle...)"
         onKeyPress={ifEnterKey(addKeyword)}
+        className="form-control"
       />
       <div className="keywords">
         {keywordNodes}
@@ -197,16 +209,13 @@ const CommentListPure = ({comments, fetchComments, keywords, containsKeywords, a
         addKeyword={addKeyword}
         removeKeyword={removeKeyword}
       />
-      <div className="commentCount refreshButton">
-          <a
-            className="glyphicon-white"
-            // glyph="refresh"
+      <div className="badge commentCount refreshButton">
+          <Icon
+            icon={refresh}
             onClick={fetchComments}
-          >
-          ♻️
-          </a>
+          />
         </div>
-      <div className="commentCount">
+      <div className="badge commentCount">
         {renderedComments.length}
       </div>
       {renderedComments}
@@ -247,6 +256,7 @@ const HackerSearchPure = ({threadOptions, selectedThread, setSelectedThread}) =>
         value={selectedThread}
         onChange={(thread) => setSelectedThread(thread)}
         options={threadOptions}
+        // className="form-control"
       />
       <CommentList threadId={threadId}/>
     </div>
