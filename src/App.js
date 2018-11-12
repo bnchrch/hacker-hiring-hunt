@@ -182,14 +182,15 @@ const Comment = ({author, created_at, text, keywords}) => {
 }
 
 const CommentListPure = ({comments, keywords, containsKeywords, addKeyword, removeKeyword}) => {
-  const renderedComments = getOr([], 'children', comments)
+  const allComments = getOr([], 'children', comments)
+  const renderedComments = allComments
     .filter(x => x.text)
     .filter(containsKeywords)
     .map(comment => (
       <Comment  key={comment.id} keywords={keywords} {...comment}/>
     ));
-
-  return comments.length > 0 && (
+  console.dir({allComments, comments, renderedComments})
+  return allComments.length > 0 && (
     <div>
       <KeywordFilter
         keywords={keywords}
