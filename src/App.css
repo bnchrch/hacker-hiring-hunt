@@ -130,12 +130,8 @@ body {
   background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAJElEQVQYV2NkIBIwEqmOgQ4K9+7d+9/Z2RnDJjpYjSsUqG81AJVuBAvCx2SfAAAAAElFTkSuQmCC) repeat;
 }
 
-.double-bounce {
+.sk-double-bounce {
   margin: auto;
-}
-
-.double-bounce1, .double-bounce2 {
-  background-color: #ff6600 !important;
 }
 
 .form-control:focus {

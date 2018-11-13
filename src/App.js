@@ -13,6 +13,9 @@ import withProps from 'recompose/withProps';
 import withState from 'recompose/withState';
 import withHandlers from 'recompose/withHandlers';
 import lifecycle from 'recompose/lifecycle';
+import branch from 'recompose/branch';
+import renderComponent from 'recompose/renderComponent';
+
 
 import moment from 'moment';
 import tinycolor from 'tinycolor2';
@@ -21,6 +24,7 @@ import Icon from 'react-icons-kit';
 import { timesCircle } from 'react-icons-kit/fa/timesCircle';
 import { refresh } from 'react-icons-kit/fa/refresh';
 
+import Spinner from 'react-spinkit';
 
 // UTIL
 
@@ -83,23 +87,47 @@ const ifEnterKey = (eventHandleFn) => (e, p) => isEnterKey(e) && eventHandleFn(e
 const threadsUrl = "https://hn.algolia.com/api/v1/search_by_date?tags=story,author_whoishiring"
 const commentUrl = (id) => `https://hn.algolia.com/api/v1/items/${id}`
 
-const fetchUrl = (url, callback) => fetch(url)
-  .then(response => response.json())
-  .then(callback);
+const LoadingSpinner = () => {
+  console.log("LS")
+
+  return (<Spinner name="double-bounce" color="#ff6600" noFadeIn />)
+};
+
+const withFakeFetch = withProps({
+  fetchUrl: () => {}
+})
+
+const withFetchUrl = compose(
+  withState("loading", "setLoading", false),
+  withHandlers({
+    fetchUrl: ({setLoading}) => (url, callback) => {
+      console.log("fetching", url)
+      setLoading(true);
+      fetch(url)
+        .then(response => response.json())
+        .then((data) => {
+          setLoading(false);
+          callback(data);
+        });
+    }
+  }),
+  branch(({loading}) => loading, renderComponent(LoadingSpinner))
+);
 
 const withHiringThreads = compose(
   withState('threadResponse', 'setThreadResponse', []),
   withState('selectedThread', 'setSelectedThread', {}),
   withProps(({threadResponse}) => ({
     threadOptions: getOr([], 'hits', threadResponse)
-      .map(({title, objectID}) => ({label: title, value: objectID})),
+    .map(({title, objectID}) => ({label: title, value: objectID})),
   })),
+  withFetchUrl,
   lifecycle({
     componentWillMount() {
-      fetchUrl(threadsUrl, this.props.setThreadResponse)
+      this.props.fetchUrl(threadsUrl, this.props.setThreadResponse)
     },
-  })
-)
+  }),
+  )
 
 // Keyword list
 
@@ -224,9 +252,10 @@ const CommentListPure = ({comments, fetchComments, keywords, containsKeywords, a
 };
 
 const withCommentData = compose(
+  withFakeFetch,
   withState('comments', 'setComments', []),
   withHandlers({
-    fetchComments: ({setComments, threadId}) => () => {
+    fetchComments: ({setComments, threadId, fetchUrl}) => () => {
       threadId && fetchUrl(commentUrl(threadId), setComments)
     }
   }),
@@ -248,6 +277,7 @@ const CommentList = compose(
 
 const HackerSearchPure = ({threadOptions, selectedThread, setSelectedThread}) => {
   const threadId = get('value', selectedThread);
+  console.log("HS")
   return (
     <div className="App">
       <h1>Hacker Hiring Hunt</h1>
@@ -256,8 +286,9 @@ const HackerSearchPure = ({threadOptions, selectedThread, setSelectedThread}) =>
         value={selectedThread}
         onChange={(thread) => setSelectedThread(thread)}
         options={threadOptions}
-        // className="form-control"
+        placeholder="select"
       />
+
       <CommentList threadId={threadId}/>
     </div>
   );
