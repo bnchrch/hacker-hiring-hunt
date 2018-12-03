@@ -91,27 +91,49 @@ const LoadingSpinner = () => (<Spinner name="double-bounce" color="#ff6600" noFa
 
 const isLoading = ({ loading }) => loading;
 
+const withCustomState = (initialState) => (compose(
+    withState('state', 'setState', initialState),
+    withHandlers({
+      updateState: ({ setState, state }) => patch => setState({ ...state, ...patch }),
+      resetState: ({ setState }) => () => setState(initialState)
+    })
+  ));
+
+const withFetchState = compose(
+  withCustomState({loading: true, refetch: false}),
+  withProps(({state}) => ({...state})),
+  withHandlers(({updateState}) => ({refreshData: updateState({refetch: true})})),
+)
+
 const withFetchOnMount = (urlPropName, responseParser) => {
-  const fetcher = (props, setState) => {
+  const fetcher = (props) => {
     fetch(props[urlPropName])
     .then(response => response.json())
     .then((response) => {
-      setState({loading: false, ...responseParser(response)})
+      props.updateState({loading: false, ...responseParser(response)})
     });
   }
-  return (lifecycle({
-  state: { loading: true },
-  componentWillMount() {
-    fetcher(this.props, this.setState.bind(this))
-  },
-  componentWillUpdate(newProps) {
-    console.log(urlPropName, {newProps, oldProps: this.props})
-    if (!newProps.loading && (newProps[urlPropName] !== this.props[urlPropName])) {
-      this.setState({loading: true})
-      fetcher(newProps, this.setState.bind(this))
+  return lifecycle({
+    // state: { loading: true},
+    componentWillMount() {
+      fetcher(this.props)
+    },
+    componentWillUpdate(newProps) {
+      console.log(urlPropName, {newProps, oldProps: this.props})
+      const watchedValueChanged = newProps[urlPropName] !== this.props[urlPropName];
+      const shouldReload = watchedValueChanged || newProps.refetch
+      if (!newProps.loading && (shouldReload)) {
+        newProps.updateState({loading: true, refetch: false})
+        fetcher(newProps)
+      }
     }
-  }
-}))}
+  })
+};
+
+const withFetch = (urlPropName, responseParser) => compose(
+  withFetchState,
+  withFetchOnMount(urlPropName, responseParser)
+);
 
 const parseThreadResponse = (threadResponse) => {
   const threads = getOr([], 'hits', threadResponse)
@@ -123,7 +145,7 @@ const withLoading = branch(isLoading, renderComponent(LoadingSpinner));
 
 const withHiringThreads = compose(
   withProps({threadsUrl}),
-  withFetchOnMount('threadsUrl', parseThreadResponse),
+  withFetch('threadsUrl', parseThreadResponse),
   withLoading,
   withState('selectedThread', 'setSelectedThread', {}),
 );
@@ -220,7 +242,7 @@ const Comment = ({author, created_at, text, keywords}) => {
   )
 }
 
-const CommentListPure = ({comments, fetchComments, keywords, containsKeywords, addKeyword, removeKeyword}) => {
+const CommentListPure = ({comments, refreshData, keywords, containsKeywords, addKeyword, removeKeyword}) => {
   const allComments = getOr([], 'children', comments)
   const renderedComments = allComments
     .filter(x => x.text)
@@ -228,6 +250,7 @@ const CommentListPure = ({comments, fetchComments, keywords, containsKeywords, a
     .map(comment => (
       <Comment  key={comment.id} keywords={keywords} {...comment}/>
     ));
+
   console.dir({allComments, comments, renderedComments})
   return allComments.length > 0 && (
     <div>
@@ -239,7 +262,7 @@ const CommentListPure = ({comments, fetchComments, keywords, containsKeywords, a
       <div className="badge commentCount refreshButton">
         <Icon
           icon={refresh}
-          onClick={fetchComments}
+          onClick={refreshData}
         />
       </div>
       <div className="badge commentCount">
@@ -252,7 +275,7 @@ const CommentListPure = ({comments, fetchComments, keywords, containsKeywords, a
 
 const withCommentData = compose(
   withProps(({threadId}) => ({commentUrl: commentUrl(threadId)})),
-  withFetchOnMount('commentUrl', (comments) => ({comments})),
+  withFetch('commentUrl', (comments) => ({comments})),
   withLoading,
 );
 
