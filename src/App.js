@@ -87,47 +87,36 @@ const ifEnterKey = (eventHandleFn) => (e, p) => isEnterKey(e) && eventHandleFn(e
 const threadsUrl = "https://hn.algolia.com/api/v1/search_by_date?tags=story,author_whoishiring"
 const commentUrl = (id) => `https://hn.algolia.com/api/v1/items/${id}`
 
-const LoadingSpinner = () => {
-  console.log("LS")
+const LoadingSpinner = () => (<Spinner name="double-bounce" color="#ff6600" noFadeIn />);
 
-  return (<Spinner name="double-bounce" color="#ff6600" noFadeIn />)
+const isLoading = ({ loading }) => loading;
+
+const withFetchOnMount = (urlPropName, responseParser) => (lifecycle({
+  state: { loading: true },
+  componentWillMount() {
+    fetch(this.props[urlPropName])
+    .then(response => response.json())
+    .then((response) => {
+      this.setState({loading: false, ...responseParser(response)})
+    })
+  },
+
+}))
+
+const parseThreadResponse = (threadResponse) => {
+  const threads = getOr([], 'hits', threadResponse)
+  const threadOptions = threads.map(({title, objectID}) => ({label: title, value: objectID}))
+  return {threadOptions}
 };
 
-const withFakeFetch = withProps({
-  fetchUrl: () => {}
-})
-
-const withFetchUrl = compose(
-  withState("loading", "setLoading", false),
-  withHandlers({
-    fetchUrl: ({setLoading}) => (url, callback) => {
-      console.log("fetching", url)
-      setLoading(true);
-      fetch(url)
-        .then(response => response.json())
-        .then((data) => {
-          setLoading(false);
-          callback(data);
-        });
-    }
-  }),
-  branch(({loading}) => loading, renderComponent(LoadingSpinner))
-);
+const withLoading = branch(isLoading, renderComponent(LoadingSpinner));
 
 const withHiringThreads = compose(
-  withState('threadResponse', 'setThreadResponse', []),
+  withProps({threadsUrl}),
+  withFetchOnMount('threadsUrl', parseThreadResponse),
   withState('selectedThread', 'setSelectedThread', {}),
-  withProps(({threadResponse}) => ({
-    threadOptions: getOr([], 'hits', threadResponse)
-    .map(({title, objectID}) => ({label: title, value: objectID})),
-  })),
-  withFetchUrl,
-  lifecycle({
-    componentWillMount() {
-      this.props.fetchUrl(threadsUrl, this.props.setThreadResponse)
-    },
-  }),
-  )
+  withLoading,
+);
 
 // Keyword list
 
@@ -238,11 +227,11 @@ const CommentListPure = ({comments, fetchComments, keywords, containsKeywords, a
         removeKeyword={removeKeyword}
       />
       <div className="badge commentCount refreshButton">
-          <Icon
-            icon={refresh}
-            onClick={fetchComments}
-          />
-        </div>
+        <Icon
+          icon={refresh}
+          onClick={fetchComments}
+        />
+      </div>
       <div className="badge commentCount">
         {renderedComments.length}
       </div>
@@ -252,21 +241,10 @@ const CommentListPure = ({comments, fetchComments, keywords, containsKeywords, a
 };
 
 const withCommentData = compose(
-  withFakeFetch,
-  withState('comments', 'setComments', []),
-  withHandlers({
-    fetchComments: ({setComments, threadId, fetchUrl}) => () => {
-      threadId && fetchUrl(commentUrl(threadId), setComments)
-    }
-  }),
-  lifecycle({
-    componentWillUpdate({fetchComments, threadId}) {
-      if (threadId !== this.props.threadId) {
-        fetchComments()
-      }
-    },
-  })
-)
+  withProps(({threadId}) => ({commentUrl: commentUrl(threadId)})),
+  withFetchOnMount('commentUrl', (comments) => ({comments})),
+  withLoading,
+);
 
 const CommentList = compose(
   withCommentData,
@@ -277,7 +255,7 @@ const CommentList = compose(
 
 const HackerSearchPure = ({threadOptions, selectedThread, setSelectedThread}) => {
   const threadId = get('value', selectedThread);
-  console.log("HS")
+  console.log("HS", threadId)
   return (
     <div className="App">
       <h1>Hacker Hiring Hunt</h1>
@@ -289,7 +267,7 @@ const HackerSearchPure = ({threadOptions, selectedThread, setSelectedThread}) =>
         placeholder="select"
       />
 
-      <CommentList threadId={threadId}/>
+      {threadId && <CommentList threadId={threadId}/>}
     </div>
   );
 };
