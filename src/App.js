@@ -91,17 +91,27 @@ const LoadingSpinner = () => (<Spinner name="double-bounce" color="#ff6600" noFa
 
 const isLoading = ({ loading }) => loading;
 
-const withFetchOnMount = (urlPropName, responseParser) => (lifecycle({
-  state: { loading: true },
-  componentWillMount() {
-    fetch(this.props[urlPropName])
+const withFetchOnMount = (urlPropName, responseParser) => {
+  const fetcher = (props, setState) => {
+    fetch(props[urlPropName])
     .then(response => response.json())
     .then((response) => {
-      this.setState({loading: false, ...responseParser(response)})
-    })
+      setState({loading: false, ...responseParser(response)})
+    });
+  }
+  return (lifecycle({
+  state: { loading: true },
+  componentWillMount() {
+    fetcher(this.props, this.setState.bind(this))
   },
-
-}))
+  componentWillUpdate(newProps) {
+    console.log(urlPropName, {newProps, oldProps: this.props})
+    if (!newProps.loading && (newProps[urlPropName] !== this.props[urlPropName])) {
+      this.setState({loading: true})
+      fetcher(newProps, this.setState.bind(this))
+    }
+  }
+}))}
 
 const parseThreadResponse = (threadResponse) => {
   const threads = getOr([], 'hits', threadResponse)
@@ -114,8 +124,8 @@ const withLoading = branch(isLoading, renderComponent(LoadingSpinner));
 const withHiringThreads = compose(
   withProps({threadsUrl}),
   withFetchOnMount('threadsUrl', parseThreadResponse),
-  withState('selectedThread', 'setSelectedThread', {}),
   withLoading,
+  withState('selectedThread', 'setSelectedThread', {}),
 );
 
 // Keyword list
