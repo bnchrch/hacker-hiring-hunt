@@ -2,6 +2,9 @@ import React, {Fragment} from 'react';
 
 import getOr from 'lodash/fp/getOr';
 import get from 'lodash/fp/get';
+import orderBy from 'lodash/fp/orderBy';
+import find from 'lodash/fp/find';
+import flow from 'lodash/fp/flow';
 
 import Select from 'react-select';
 
@@ -22,17 +25,22 @@ const parseThreadResponse = (threadResponse) => {
   return {threadOptions}
 };
 
+// Set the drop down to the latest who's hiring thread
+const setDefaultThread = flow(
+  get('threadOptions'),
+  orderBy('value', 'desc'),
+  find(({label}) => label.toLowerCase().includes('hiring?'))
+);
+
 const withHiringThreads = compose(
   withProps({threadsUrl}),
   withFetch('threadsUrl', parseThreadResponse),
-  withState('selectedThread', 'setSelectedThread', {}),
+  withState('selectedThread', 'setSelectedThread', setDefaultThread),
 );
-
-// MAIN
 
 const HackerSearchPure = ({threadOptions, selectedThread, setSelectedThread}) => {
   const threadId = get('value', selectedThread);
-  console.log("HS", threadId)
+
   return (
     <Fragment>
       <Select
