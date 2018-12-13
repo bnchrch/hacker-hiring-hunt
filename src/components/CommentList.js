@@ -9,19 +9,21 @@ import withState from 'recompose/withState';
 import withHandlers from 'recompose/withHandlers';
 
 import Icon from 'react-icons-kit';
-import { refresh } from 'react-icons-kit/fa/refresh';
+import {refresh} from 'react-icons-kit/fa/refresh';
 
 import withFetch from '../hoc/withFetch';
 import KeywordFilter from './KeywordFilter';
 import Comment from './Comment';
 
-const commentUrl = (id) => `https://hn.algolia.com/api/v1/items/${id}`
+const commentUrl = (id) => `https://hn.algolia.com/api/v1/items/${id}`;
 
 const withKeywords = compose(
   withState('keywords', 'setKeywords', []),
   withHandlers({
-    removeKeyword: ({keywords, setKeywords}) => (keyword_to_remove) => {
-      const newKeywords = keywords.filter(keyword => keyword !== keyword_to_remove);
+    removeKeyword: ({keywords, setKeywords}) => (keywordToRemove) => {
+      const newKeywords = keywords.filter(
+        (keyword) => keyword !== keywordToRemove
+      );
       setKeywords(newKeywords);
     },
 
@@ -35,50 +37,56 @@ const withKeywords = compose(
       return keywords.reduce((prev, keyword) => {
         return prev && text.toLowerCase().indexOf(keyword.toLowerCase()) >= 0;
       }, true);
-    }
+    },
   })
-)
+);
 
-const CommentListPure = ({comments, refreshData, keywords, containsKeywords, addKeyword, removeKeyword}) => {
-  const allComments = getOr([], 'children', comments)
+const CommentListPure = ({
+  comments,
+  refreshData,
+  keywords,
+  containsKeywords,
+  addKeyword,
+  removeKeyword,
+}) => {
+  const allComments = getOr([], 'children', comments);
   const renderedComments = allComments
-    .filter(x => x.text)
+    .filter((x) => x.text)
     .filter(containsKeywords)
-    .map(comment => (
-      <Comment key={comment.id} keywords={keywords} {...comment}/>
+    .map((comment) => (
+      <Comment key={comment.id} keywords={keywords} {...comment} />
     ));
 
-  return allComments.length > 0 && (
-    <div className="commentList">
-      <KeywordFilter
-        keywords={keywords}
-        addKeyword={addKeyword}
-        removeKeyword={removeKeyword}
-      />
-      <div className="commentActionTray">
-        <div className="badge commentCount refreshButton spacing">
-          <Icon
-            icon={refresh}
-            onClick={refreshData}
-          />
+  return (
+    allComments.length > 0 && (
+      <div className="commentList">
+        <KeywordFilter
+          keywords={keywords}
+          addKeyword={addKeyword}
+          removeKeyword={removeKeyword}
+        />
+        <div className="commentActionTray">
+          <div className="badge commentCount refreshButton spacing">
+            <Icon icon={refresh} onClick={refreshData} />
+          </div>
+          <div className="badge commentCount spacing">
+            {renderedComments.length}
+          </div>
         </div>
-        <div className="badge commentCount spacing">
-          {renderedComments.length}
-        </div>
+        {renderedComments}
       </div>
-      {renderedComments}
-    </div>
+    )
   );
 };
 
 const withCommentData = compose(
   withProps(({threadId}) => ({commentUrl: commentUrl(threadId)})),
-  withFetch('commentUrl', (comments) => ({comments})),
+  withFetch('commentUrl', (comments) => ({comments}))
 );
 
 const CommentList = compose(
   withKeywords,
-  withCommentData,
+  withCommentData
 )(CommentListPure);
 
 export default CommentList;

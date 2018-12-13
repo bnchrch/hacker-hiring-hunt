@@ -15,14 +15,16 @@ import withState from 'recompose/withState';
 import withFetch from '../hoc/withFetch';
 import CommentList from '../components/CommentList';
 
-// THREADS
-
-const threadsUrl = "https://hn.algolia.com/api/v1/search_by_date?tags=story,author_whoishiring"
+const threadsUrl =
+  'https://hn.algolia.com/api/v1/search_by_date?tags=story,author_whoishiring';
 
 const parseThreadResponse = (threadResponse) => {
-  const threads = getOr([], 'hits', threadResponse)
-  const threadOptions = threads.map(({title, objectID}) => ({label: title, value: objectID}))
-  return {threadOptions}
+  const threads = getOr([], 'hits', threadResponse);
+  const threadOptions = threads.map(({title, objectID}) => ({
+    label: title,
+    value: objectID,
+  }));
+  return {threadOptions};
 };
 
 // Set the drop down to the latest who's hiring thread
@@ -35,10 +37,14 @@ const setDefaultThread = flow(
 const withHiringThreads = compose(
   withProps({threadsUrl}),
   withFetch('threadsUrl', parseThreadResponse),
-  withState('selectedThread', 'setSelectedThread', setDefaultThread),
+  withState('selectedThread', 'setSelectedThread', setDefaultThread)
 );
 
-const HackerSearchPure = ({threadOptions, selectedThread, setSelectedThread}) => {
+const HackerSearchPure = ({
+  threadOptions,
+  selectedThread,
+  setSelectedThread,
+}) => {
   const threadId = get('value', selectedThread);
 
   return (
@@ -52,7 +58,7 @@ const HackerSearchPure = ({threadOptions, selectedThread, setSelectedThread}) =>
         isSearchable
       />
 
-      {threadId && <CommentList threadId={threadId}/>}
+      {threadId && <CommentList threadId={threadId} />}
     </Fragment>
   );
 };

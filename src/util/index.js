@@ -16,7 +16,9 @@ const colorWheelIncrement = 57;
  */
 function extractColorFromWheel(baseColor, degreeIncrement, i) {
   const degreesToSpin = degreeIncrement * i;
-  return tinycolor(baseColor).spin(degreesToSpin).toString();
+  return tinycolor(baseColor)
+    .spin(degreesToSpin)
+    .toString();
 }
 
 /**
@@ -56,10 +58,7 @@ const isEnterKey = ({key}) => key === 'Enter';
  * @param {Function} eventHandleFn - Function to call on enter keypress.
  * @returns {Function} The function to be used by event handlers
  */
-const ifEnterKey = (eventHandleFn) => (e, p) => isEnterKey(e) && eventHandleFn(e, p);
+const ifEnterKey = (eventHandleFn) => (e, p) =>
+  isEnterKey(e) && eventHandleFn(e, p);
 
-export {
-  ifEnterKey,
-  getColorFromIndex,
-  highlightWordsInHtml,
-};
+export {ifEnterKey, getColorFromIndex, highlightWordsInHtml};

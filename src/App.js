@@ -1,9 +1,8 @@
 import React from 'react';
 
-import HackerSearch from './components/HackerSearch'
+import HackerSearch from './components/HackerSearch';
 
 import './App.css';
-
 
 const App = () => (
   <div className="App">

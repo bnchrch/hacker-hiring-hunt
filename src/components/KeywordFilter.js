@@ -1,13 +1,10 @@
 import React from 'react';
 
 import Icon from 'react-icons-kit';
-import { timesCircle } from 'react-icons-kit/fa/timesCircle';
+import {timesCircle} from 'react-icons-kit/fa/timesCircle';
 import isEmpty from 'lodash/fp/isEmpty';
 
-import {
-  ifEnterKey,
-  getColorFromIndex,
-} from '../util';
+import {ifEnterKey, getColorFromIndex} from '../util';
 
 // Keyword list
 
@@ -28,11 +25,16 @@ const Keyword = ({text, removeKeyword, index}) => {
       />
     </div>
   );
-}
+};
 
 const KeywordFilter = ({keywords, addKeyword, removeKeyword}) => {
   const keywordNodes = keywords.map((keyword, i) => (
-    <Keyword text={keyword} key={keyword} index={i} removeKeyword={removeKeyword}/>
+    <Keyword
+      text={keyword}
+      key={keyword}
+      index={i}
+      removeKeyword={removeKeyword}
+    />
   ));
 
   return (
@@ -43,14 +45,11 @@ const KeywordFilter = ({keywords, addKeyword, removeKeyword}) => {
         onKeyPress={ifEnterKey(addKeyword)}
         className="form-control spacing"
       />
-      {
-        !isEmpty(keywordNodes) &&
-          <div className="keywords spacing">
-            {keywordNodes}
-          </div>
-      }
+      {!isEmpty(keywordNodes) && (
+        <div className="keywords spacing">{keywordNodes}</div>
+      )}
     </React.Fragment>
-    );
-}
+  );
+};
 
 export default KeywordFilter;
