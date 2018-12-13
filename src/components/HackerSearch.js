@@ -48,7 +48,7 @@ const HackerSearchPure = ({threadOptions, selectedThread, setSelectedThread}) =>
         onChange={(thread) => setSelectedThread(thread)}
         options={threadOptions}
         placeholder="select"
-        className="marginBottom"
+        className="spacing"
         isSearchable
       />
 

@@ -45,10 +45,9 @@ const CommentListPure = ({comments, refreshData, keywords, containsKeywords, add
     .filter(x => x.text)
     .filter(containsKeywords)
     .map(comment => (
-      <Comment  key={comment.id} keywords={keywords} {...comment}/>
+      <Comment key={comment.id} keywords={keywords} {...comment}/>
     ));
 
-  console.dir({allComments, comments, renderedComments})
   return allComments.length > 0 && (
     <div className="commentList">
       <KeywordFilter
@@ -57,13 +56,13 @@ const CommentListPure = ({comments, refreshData, keywords, containsKeywords, add
         removeKeyword={removeKeyword}
       />
       <div className="commentActionTray">
-        <div className="badge commentCount refreshButton">
+        <div className="badge commentCount refreshButton spacing">
           <Icon
             icon={refresh}
             onClick={refreshData}
           />
         </div>
-        <div className="badge commentCount">
+        <div className="badge commentCount spacing">
           {renderedComments.length}
         </div>
       </div>
@@ -78,8 +77,8 @@ const withCommentData = compose(
 );
 
 const CommentList = compose(
-  withCommentData,
   withKeywords,
+  withCommentData,
 )(CommentListPure);
 
 export default CommentList;

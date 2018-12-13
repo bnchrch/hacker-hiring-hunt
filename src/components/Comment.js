@@ -26,7 +26,7 @@ const CommentBody = ({text, keywords}) => {
 const Comment = ({author, created_at, text, keywords}) => {
   const formattedCreatedAt = moment(created_at).format('h:mm:ss a on MMMM Do YYYY')
   return (
-    <div className="comment">
+    <div className="comment spacing">
       <h4 className="commentAuthor">
         {author} <span className="createdAt">{formattedCreatedAt}</span>
       </h4>

@@ -6,8 +6,6 @@ import lifecycle from 'recompose/lifecycle';
 
 import withLoading from './withLoading';
 
-///
-
 const withCustomState = (initialState) => (compose(
     withState('state', 'setState', initialState),
     withHandlers({
@@ -35,7 +33,6 @@ const withFetchOnMount = (urlPropName, responseParser) => {
       fetcher(this.props)
     },
     componentWillUpdate(newProps) {
-      console.log(urlPropName, {newProps, oldProps: this.props})
       const watchedValueChanged = newProps[urlPropName] !== this.props[urlPropName];
       const shouldReload = watchedValueChanged || newProps.refetch
       if (!newProps.loading && (shouldReload)) {

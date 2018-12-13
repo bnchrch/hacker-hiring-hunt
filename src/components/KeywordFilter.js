@@ -41,15 +41,15 @@ const KeywordFilter = ({keywords, addKeyword, removeKeyword}) => {
         type="text"
         placeholder="Enter a Keyword to search for and press Enter (e.g. Python, Remote, Seattle...)"
         onKeyPress={ifEnterKey(addKeyword)}
-        className="form-control marginBottom"
+        className="form-control spacing"
       />
       {
         !isEmpty(keywordNodes) &&
-          <div className="keywords">
+          <div className="keywords spacing">
             {keywordNodes}
           </div>
       }
-    </React.Fragment  >
+    </React.Fragment>
     );
 }
 

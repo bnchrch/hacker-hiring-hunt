@@ -24,6 +24,9 @@ pre {
   overflow-y: scroll;
 }
 
+.sk-double-bounce {
+  margin-top: 10px;
+}
 
 .badge {
   display: inline-flex;
@@ -96,8 +99,6 @@ h1 {
 }
 
 .keywords {
-  margin-top: 10px;
-  margin-bottom: 10px;
   flex-direction: row;
 }
 
@@ -106,7 +107,7 @@ h1 {
   padding-right: 5px;
 }
 
-.marginBottom {
+.spacing {
   margin-bottom: 10px;
 }
 
@@ -120,7 +121,6 @@ h1 {
 .comment, .notFound {
   background-color: white;
   padding: 1px 12px 7px 12px;
-  margin-bottom: 20px;
   border: 1px solid #efefef;
 }
 
@@ -130,7 +130,6 @@ h1 {
 
 .commentCount {
   background-color: #ff6600;
-  margin-bottom: 10px;
   font-size: 15px;
 }
 
