@@ -1,7 +1,5 @@
 /* Stolen */
 .form-control {
-  display: block;
-  width: 100%;
   padding: .375rem .75rem;
   font-size: 1rem;
   line-height: 1.5;
@@ -14,7 +12,7 @@
 }
 
 .badge {
-  display: inline-block;
+  display: inline-flex;
   padding: .25em .4em;
   font-size: 75%;
   font-weight: 700;
@@ -28,10 +26,15 @@
 
 /* General */
 
+#root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .App {
-  width: 80vw;
-  max-width: 800px;
-  margin: auto;
+  width: 90vw;
+  max-width: 1000px;
 }
 
 h1 {
@@ -39,8 +42,16 @@ h1 {
   font-family: 'Yesteryear', serif;
   color: #ff6600;
   font-size: 70px;
-  padding-bottom: 30px;
   font-weight: 500;
+}
+
+.commentList {
+  display: flex;
+  flex-direction: column;
+}
+
+.commentActionTray{
+  flex-direction: row;
 }
 
 
@@ -49,7 +60,6 @@ h1 {
   font-size: 14px;
   padding: .3em .4em .4em;
   margin: .1em .1em;
-  display: inline-block;
 }
 
 .keyword a {
@@ -69,16 +79,21 @@ h1 {
 
 .keyword .glyphicon-white {
   color: #fff;
-  margin-top: 1px;
 }
 
 .keywords {
   margin-top: 10px;
   margin-bottom: 10px;
+  flex-direction: row;
 }
 
 .keywordText {
+  margin-top: 1px;
   padding-right: 5px;
+}
+
+.marginBottom {
+  margin-bottom: 10px;
 }
 
 /* COMMENT */
@@ -106,7 +121,6 @@ h1 {
 }
 
 .refreshButton {
-  margin-top: 1px;
   margin-right: 5px;
 }
 

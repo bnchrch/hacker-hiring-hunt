@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 
 import getOr from 'lodash/fp/getOr';
 import get from 'lodash/fp/get';
@@ -34,16 +34,17 @@ const HackerSearchPure = ({threadOptions, selectedThread, setSelectedThread}) =>
   const threadId = get('value', selectedThread);
   console.log("HS", threadId)
   return (
-    <div>
+    <Fragment>
       <Select
         value={selectedThread}
         onChange={(thread) => setSelectedThread(thread)}
         options={threadOptions}
         placeholder="select"
+        className="marginBottom"
       />
 
       {threadId && <CommentList threadId={threadId}/>}
-    </div>
+    </Fragment>
   );
 };
 

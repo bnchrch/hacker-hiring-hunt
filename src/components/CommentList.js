@@ -50,20 +50,22 @@ const CommentListPure = ({comments, refreshData, keywords, containsKeywords, add
 
   console.dir({allComments, comments, renderedComments})
   return allComments.length > 0 && (
-    <div>
+    <div className="commentList">
       <KeywordFilter
         keywords={keywords}
         addKeyword={addKeyword}
         removeKeyword={removeKeyword}
       />
-      <div className="badge commentCount refreshButton">
-        <Icon
-          icon={refresh}
-          onClick={refreshData}
-        />
-      </div>
-      <div className="badge commentCount">
-        {renderedComments.length}
+      <div className="commentActionTray">
+        <div className="badge commentCount refreshButton">
+          <Icon
+            icon={refresh}
+            onClick={refreshData}
+          />
+        </div>
+        <div className="badge commentCount">
+          {renderedComments.length}
+        </div>
       </div>
       {renderedComments}
     </div>

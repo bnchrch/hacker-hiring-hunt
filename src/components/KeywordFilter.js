@@ -2,6 +2,7 @@ import React from 'react';
 
 import Icon from 'react-icons-kit';
 import { timesCircle } from 'react-icons-kit/fa/timesCircle';
+import isEmpty from 'lodash/fp/isEmpty';
 
 import {
   ifEnterKey,
@@ -30,23 +31,25 @@ const Keyword = ({text, removeKeyword, index}) => {
 }
 
 const KeywordFilter = ({keywords, addKeyword, removeKeyword}) => {
-  const keywordNodes = keywords.map((keyword, i) => {
-    return (
-      <Keyword text={keyword} key={keyword} index={i} removeKeyword={removeKeyword}/>
-    );
-  });
+  const keywordNodes = keywords.map((keyword, i) => (
+    <Keyword text={keyword} key={keyword} index={i} removeKeyword={removeKeyword}/>
+  ));
+
   return (
-    <div>
+    <React.Fragment>
       <input
         type="text"
         placeholder="Enter a Keyword to search for and press Enter (e.g. Python, Remote, Seattle...)"
         onKeyPress={ifEnterKey(addKeyword)}
-        className="form-control"
+        className="form-control marginBottom"
       />
-      <div className="keywords">
-        {keywordNodes}
-      </div>
-    </div>
+      {
+        !isEmpty(keywordNodes) &&
+          <div className="keywords">
+            {keywordNodes}
+          </div>
+      }
+    </React.Fragment  >
     );
 }
 
