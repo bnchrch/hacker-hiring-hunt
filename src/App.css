@@ -1,4 +1,74 @@
-/* Stolen */
+/* Overrides */
+
+body {
+  color: #586e75;
+  background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAJElEQVQYV2NkIBIwEqmOgQ4K9+7d+9/Z2RnDJjpYjSsUqG81AJVuBAvCx2SfAAAAAElFTkSuQmCC) repeat;
+}
+
+h1 {
+  text-align: center;
+  font-family: 'Yesteryear', serif;
+  color: #ff6600;
+  font-size: 70px;
+  font-weight: 500;
+}
+
+a {
+  color: #EEA776;
+}
+
+pre {
+  overflow-y: scroll;
+}
+
+.sk-double-bounce {
+  margin: auto;
+}
+
+/* General */
+
+#root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.App {
+  width: 90vw;
+  max-width: 1000px;
+}
+
+.hackerSearch {
+  padding-top: 30px;
+}
+
+.hackerSearch h1 {
+  text-align: center;
+  font-family: 'Yesteryear', serif;
+  color: #ff6600;
+  font-size: 70px;
+  padding-bottom: 30px;
+}
+
+.spacing {
+  margin-bottom: 10px;
+}
+
+.badge {
+  display: inline-flex;
+  padding: .25em .4em;
+  font-size: 75%;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  border-radius: .25rem;
+  color: white;
+}
+
+/* Forms */
+
 .form-control {
   padding: .375rem .75rem;
   font-size: 1rem;
@@ -19,48 +89,8 @@
   box-shadow: none !important;
 }
 
-/* Ensures code blocks don't overflow */
-pre {
-  overflow-y: scroll;
-}
 
-.sk-double-bounce {
-  margin-top: 10px;
-}
-
-.badge {
-  display: inline-flex;
-  padding: .25em .4em;
-  font-size: 75%;
-  font-weight: 700;
-  line-height: 1;
-  text-align: center;
-  white-space: nowrap;
-  vertical-align: baseline;
-  border-radius: .25rem;
-  color: white;
-}
-
-/* General */
-
-#root {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.App {
-  width: 90vw;
-  max-width: 1000px;
-}
-
-h1 {
-  text-align: center;
-  font-family: 'Yesteryear', serif;
-  color: #ff6600;
-  font-size: 70px;
-  font-weight: 500;
-}
+/* Comments */
 
 .commentList {
   display: flex;
@@ -71,8 +101,46 @@ h1 {
   flex-direction: row;
 }
 
+.comment, .notFound {
+  background-color: white;
+  padding: 1px 12px 7px 12px;
+  border: 1px solid #efefef;
+}
 
-/* KEYWORD */
+.commentCount {
+  background-color: #ff6600;
+  font-size: 15px;
+}
+
+.highlighted {
+  padding: 1px 3px;
+  color: white;
+  margin: 0px 1px;
+}
+
+.createdAt {
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 100px;
+}
+
+.commentAuthor {
+  color: #93a1a1;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #93a1a1;
+  width: 50%;
+  font-weight: 200;
+}
+
+.notFound {
+  text-align: center;
+}
+
+.refreshButton {
+  margin-right: 5px;
+}
+
+/* Keywords */
 .keyword {
   font-size: 14px;
   padding: .3em .4em .4em;
@@ -105,78 +173,4 @@ h1 {
 .keywordText {
   margin-top: 1px;
   padding-right: 5px;
-}
-
-.spacing {
-  margin-bottom: 10px;
-}
-
-/* COMMENT */
-.highlighted {
-  padding: 1px 3px;
-  color: white;
-  margin: 0px 1px;
-}
-
-.comment, .notFound {
-  background-color: white;
-  padding: 1px 12px 7px 12px;
-  border: 1px solid #efefef;
-}
-
-.notFound {
-  text-align: center;
-}
-
-.commentCount {
-  background-color: #ff6600;
-  font-size: 15px;
-}
-
-.refreshButton {
-  margin-right: 5px;
-}
-
-.createdAt {
-  font-size: 10px;
-  font-style: normal;
-  font-weight: 100px;
-}
-
-.commentAuthor {
-  color: #93a1a1;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #93a1a1;
-  width: 50%;
-  font-weight: 200;
-}
-
-/* OVERRIDES */
-body {
-  color: #586e75;
-  background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAJElEQVQYV2NkIBIwEqmOgQ4K9+7d+9/Z2RnDJjpYjSsUqG81AJVuBAvCx2SfAAAAAElFTkSuQmCC) repeat;
-}
-
-.sk-double-bounce {
-  margin: auto;
-}
-
-.form-control:focus {
-  border-color: #EEA776;
-  -webkit-box-shadow: none !important;
-  -moz-box-shadow: none !important;
-  box-shadow: none !important;
-}
-
-/* HACKER SEARCH */
-.hackerSearch {
-  padding-top: 30px;
-}
-
-.hackerSearch h1 {
-  text-align: center;
-  font-family: 'Yesteryear', serif;
-  color: #ff6600;
-  font-size: 70px;
-  padding-bottom: 30px;
 }
