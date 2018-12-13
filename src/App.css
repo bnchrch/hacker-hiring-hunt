@@ -174,3 +174,10 @@ pre {
   margin-top: 1px;
   padding-right: 5px;
 }
+
+/* github button */
+.githubStar {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+}
