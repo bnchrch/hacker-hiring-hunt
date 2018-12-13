@@ -28,7 +28,8 @@ function extractColorFromWheel(baseColor, degreeIncrement, i) {
  * @returns
  */
 function highlightWordsInHtml(line, word, color) {
-  const regex = new RegExp(`(${word})`, 'gi');
+  // ensure we capture the keyword, except if found inside a html tag
+  const regex = new RegExp(`(?<!<[^>]*)(${word})`, 'gi');
   const spanTag = `<span class="highlighted" style="background-color: ${color}">$1</span>`;
   return line.replace(regex, spanTag);
 }

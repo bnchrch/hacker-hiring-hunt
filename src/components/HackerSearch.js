@@ -49,6 +49,7 @@ const HackerSearchPure = ({threadOptions, selectedThread, setSelectedThread}) =>
         options={threadOptions}
         placeholder="select"
         className="marginBottom"
+        isSearchable
       />
 
       {threadId && <CommentList threadId={threadId}/>}
