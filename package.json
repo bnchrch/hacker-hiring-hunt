@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "eslint": "^5.10.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-config-metalab": "^10.0.0",
     "moment": "^2.22.2",
