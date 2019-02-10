@@ -9,7 +9,7 @@ h1 {
   text-align: center;
   font-family: 'Yesteryear', serif;
   color: #ff6600;
-  font-size: 70px;
+  font-size: 4.375rem;
   font-weight: 500;
 }
 
@@ -23,7 +23,7 @@ pre {
 
 .sk-double-bounce {
   margin: auto;
-  margin-top: 80px;
+  margin-top: 5rem;
 }
 
 /* General */
@@ -36,23 +36,23 @@ pre {
 
 .App {
   width: 90vw;
-  max-width: 1000px;
+  max-width: 62.5rem;
 }
 
 .hackerSearch {
-  padding-top: 30px;
+  padding-top: 1.875rem;
 }
 
 .hackerSearch h1 {
   text-align: center;
   font-family: 'Yesteryear', serif;
   color: #ff6600;
-  font-size: 70px;
-  padding-bottom: 30px;
+  font-size: 4.375rem;
+  padding-bottom: 1.875rem;
 }
 
 .spacing {
-  margin-bottom: 10px;
+  margin-bottom: 0.625rem;
 }
 
 .badge {
@@ -77,7 +77,7 @@ pre {
   color: #495057;
   background-color: #fff;
   background-clip: padding-box;
-  border: 1px solid #ced4da;
+  border: 0.0625rem solid #ced4da;
   border-radius: .25rem;
   transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
@@ -104,31 +104,31 @@ pre {
 
 .comment, .notFound {
   background-color: white;
-  padding: 1px 12px 7px 12px;
-  border: 1px solid #efefef;
+  padding: 0.0625rem 0.75rem 0.4375rem 0.75rem;
+  border: 0.0625rem solid #efefef;
 }
 
 .commentCount {
   background-color: #ff6600;
-  font-size: 15px;
+  font-size: 0.9375rem;
 }
 
 .highlighted {
-  padding: 1px 3px;
+  padding: 0.0625rem 0.1875rem;
   color: white;
-  margin: 0px 1px;
+  margin: 0rem 0.0625rem;
 }
 
 .createdAt {
-  font-size: 10px;
+  font-size: 0.625rem;
   font-style: normal;
-  font-weight: 100px;
+  font-weight: 6.25rem;
 }
 
 .commentAuthor {
   color: #93a1a1;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #93a1a1;
+  padding-bottom: 0.625rem;
+  border-bottom: 0.0625rem solid #93a1a1;
   width: 50%;
   font-weight: 200;
 }
@@ -139,12 +139,12 @@ pre {
 }
 
 .refreshButton {
-  margin-right: 5px;
+  margin-right: 0.3125rem;
 }
 
 /* Keywords */
 .keyword {
-  font-size: 14px;
+  font-size: 0.875rem;
   padding: .3em .4em .4em;
   margin: .1em .1em;
 }
@@ -173,13 +173,13 @@ pre {
 }
 
 .keywordText {
-  margin-top: 1px;
-  padding-right: 5px;
+  margin-top: 0.0625rem;
+  padding-right: 0.3125rem;
 }
 
 /* github button */
 .githubStar {
   position: absolute;
-  top: 15px;
-  right: 20px;
+  top: 0.9375rem;
+  right: 1.25rem;
 }
