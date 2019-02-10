@@ -2,6 +2,7 @@ import React from 'react';
 
 import getOr from 'lodash/fp/getOr';
 import uniq from 'lodash/fp/uniq';
+import isEmpty from 'lodash/fp/isEmpty';
 
 import compose from 'recompose/compose';
 import withProps from 'recompose/withProps';
@@ -47,6 +48,17 @@ const withKeywords = compose(
 );
 
 /**
+ * Card to communicate that no comments were found.
+ * @returns {*} React Component
+ */
+const NoCommentsFound = () => (
+  <div className="comment notFound">
+    <h2>🤷‍ Someones being a bit picky!</h2>
+    <h3>We couldn't find the kind of post your looking for. Try a different search or try again later and something might come up!</h3>
+  </div>
+);
+
+/**
  * List of HN comments
  * @returns {*} React Component
  */
@@ -82,7 +94,11 @@ const CommentListPure = ({
             {renderedComments.length}
           </div>
         </div>
-        {renderedComments}
+        {
+          isEmpty(renderedComments)
+            ? <NoCommentsFound/>
+            : renderedComments
+        }
       </div>
     )
   );
