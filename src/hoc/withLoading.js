@@ -10,7 +10,10 @@ import Spinner from 'react-spinkit';
  * @returns {*} React Component
  */
 const LoadingSpinner = () => (
-  <Spinner name="double-bounce" color="#ff6600" noFadeIn />
+  <div className="loadingMessage">
+    <h1>fetching... </h1>
+    <Spinner name="double-bounce" color="#ff6600" noFadeIn />
+    </div>
 );
 
 /**

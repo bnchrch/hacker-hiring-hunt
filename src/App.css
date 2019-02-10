@@ -13,6 +13,15 @@ h1 {
   font-weight: 500;
 }
 
+.loadingMessage > h1 {
+  font-size: 2.5rem;
+}
+
+.loadingMessage {
+  margin-top: 5rem;
+
+}
+
 a {
   color: #EEA776;
 }
@@ -23,7 +32,6 @@ pre {
 
 .sk-double-bounce {
   margin: auto;
-  margin-top: 5rem;
 }
 
 /* General */
