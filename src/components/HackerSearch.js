@@ -18,6 +18,11 @@ import CommentList from '../components/CommentList';
 const threadsUrl =
   'https://hn.algolia.com/api/v1/search_by_date?tags=story,author_whoishiring';
 
+/**
+ * Parse the Algolia resposnse
+ * @param {Object} threadResponse - The json data returned by algolia for a HN thread
+ * @returns {Object} React Component
+ */
 const parseThreadResponse = (threadResponse) => {
   const threads = getOr([], 'hits', threadResponse);
   const threadOptions = threads.map(({title, objectID}) => ({
@@ -40,6 +45,10 @@ const withHiringThreads = compose(
   withState('selectedThread', 'setSelectedThread', setDefaultThread)
 );
 
+/**
+ * Allows you to search the HN's whoshiring threads for keywords
+ * @returns {*} React Component
+ */
 const HackerSearchPure = ({
   threadOptions,
   selectedThread,

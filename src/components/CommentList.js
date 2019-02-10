@@ -15,6 +15,11 @@ import withFetch from '../hoc/withFetch';
 import KeywordFilter from './KeywordFilter';
 import Comment from './Comment';
 
+/**
+ * Gets an algolia url for a given HN thread
+ * @param {String} id - The id of the thread
+ * @returns {String} An algolia URL
+ */
 const commentUrl = (id) => `https://hn.algolia.com/api/v1/items/${id}`;
 
 const withKeywords = compose(
@@ -41,6 +46,10 @@ const withKeywords = compose(
   })
 );
 
+/**
+ * List of HN comments
+ * @returns {*} React Component
+ */
 const CommentListPure = ({
   comments,
   refreshData,

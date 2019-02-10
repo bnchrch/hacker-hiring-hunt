@@ -6,6 +6,11 @@ import lifecycle from 'recompose/lifecycle';
 
 import withLoading from './withLoading';
 
+/**
+ * Add simple state handler
+ * @param {Object} initialState - The state to start with
+ * @returns {Function} HOC
+ */
 const withCustomState = (initialState) =>
   compose(
     withState('state', 'setState', initialState),
@@ -24,7 +29,18 @@ const withFetchState = compose(
   }))
 );
 
+/**
+ * Fetches data from a url located at the given prop on mount
+ * @param {String} urlPropName - The prop to find the url
+ * @param {Fucntion} responseParser - The callback that receives the data
+ * @returns {Function} HOC
+ */
 const withFetchOnMount = (urlPropName, responseParser) => {
+  /**
+   * Fetches data for the given url
+   * @param {Object} props - The calling components props
+   * @returns {void}
+   */
   const fetcher = (props) => {
     fetch(props[urlPropName])
       .then((response) => response.json())
@@ -32,14 +48,15 @@ const withFetchOnMount = (urlPropName, responseParser) => {
         props.updateState({loading: false, ...responseParser(response)});
       });
   };
+
   return lifecycle({
     componentWillMount() {
       fetcher(this.props);
     },
     componentWillUpdate(newProps) {
-      const watchedValueChanged =
-        newProps[urlPropName] !== this.props[urlPropName];
+      const watchedValueChanged = newProps[urlPropName] !== this.props[urlPropName];
       const shouldReload = watchedValueChanged || newProps.refetch;
+
       if (!newProps.loading && shouldReload) {
         newProps.updateState({loading: true, refetch: false});
         fetcher(newProps);
@@ -48,6 +65,12 @@ const withFetchOnMount = (urlPropName, responseParser) => {
   });
 };
 
+/**
+ * Fetches data from a url located at the given prop
+ * @param {String} urlPropName - The prop to find the url
+ * @param {Fucntion} responseParser - The callback that receives the data
+ * @returns {Function} HOC
+ */
 const withFetch = (urlPropName, responseParser) =>
   compose(
     withFetchState,

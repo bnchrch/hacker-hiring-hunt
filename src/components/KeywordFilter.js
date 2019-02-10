@@ -6,8 +6,10 @@ import isEmpty from 'lodash/fp/isEmpty';
 
 import {ifEnterKey, getColorFromIndex} from '../util';
 
-// Keyword list
-
+/**
+ * Displays a filter keyword to the user
+ * @returns {*} React Component
+ */
 const Keyword = ({text, removeKeyword, index}) => {
   const applyBackground = {
     backgroundColor: getColorFromIndex(index),
@@ -27,6 +29,10 @@ const Keyword = ({text, removeKeyword, index}) => {
   );
 };
 
+/**
+ * A component to create keywords to filter by
+ * @returns {*} React Component
+ */
 const KeywordFilter = ({keywords, addKeyword, removeKeyword}) => {
   const keywordNodes = keywords.map((keyword, i) => (
     <Keyword
